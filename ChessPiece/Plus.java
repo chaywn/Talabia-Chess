@@ -4,6 +4,8 @@ package ChessPiece;
 
 import java.awt.*;
 
+import Board.Board;
+
 public class Plus extends Piece{
 
     public Plus(int x, int y, Color color, Boolean flipped) {
@@ -11,14 +13,8 @@ public class Plus extends Piece{
     }
     
     @Override
-    public boolean isMovableTo(int x, int y) {
+    public boolean isMovableTo(Board board, int x, int y) {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    @Override
-    public void moveTo(int x, int y) {
-        // TODO Auto-generated method stub
-
     }
 }

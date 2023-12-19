@@ -2,6 +2,7 @@
 
 package ChessPiece;
 
+import Board.Board;
 import java.awt.*;
 
 public abstract class Piece {
@@ -45,7 +46,7 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract boolean isMovableTo(int x, int y);
-    public abstract void moveTo(int x, int y);
+    public abstract boolean isMovableTo(Board board, int x, int y);
+    public abstract void moveTo(Board board, int x, int y);
 
 }
