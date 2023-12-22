@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Melody Koh
 
 
 package Board;
@@ -29,6 +29,15 @@ public class Board {
     // Set the specified piece on the board at the specified x, y coordinate
     public void setPieceAt(Piece piece, int x, int y) {
         pieces[y][x] = piece;
+    }
+
+    // Remove the specified piece from the board
+    public void removePiece(Piece piece) {
+        if (pieces[piece.getY()][piece.getX()] == null) {
+            return;
+        } else {
+            pieces[piece.getY()][piece.getX()] = null;
+        }
     }
 
     // Set the specified player's piece set on the board according to the pieces' x, y coordinate

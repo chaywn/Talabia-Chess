@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Melody Koh
 
 package Chess;
 
@@ -13,6 +13,7 @@ import javax.swing.*;
 
 public class ChessView {
     private Main frame;
+    private static JLabel grid = new JLabel();
 
     private enum PieceImageType {
         Hourglass("Hourglass.png"),
@@ -54,11 +55,11 @@ public class ChessView {
         for (int r = 0; r < row; r++) {
             for (int c = 0; c < col; c++) {
                 Piece piece = board.getPieceAt(c, r);
-                JLabel grid = new JLabel();
+                grid = new JLabel();
                 
                 grid.setOpaque(true);
-                grid.setMinimumSize(new Dimension(frame.GRID_SIZE, frame.GRID_SIZE));
-                grid.setPreferredSize(new Dimension(frame.GRID_SIZE, frame.GRID_SIZE));
+                setGridWidth(frame.GRID_SIZE);
+                setGridHeight(frame.GRID_SIZE);
                 grid.setHorizontalAlignment(JLabel.CENTER);
 
                 if (piece != null) {
@@ -94,7 +95,7 @@ public class ChessView {
         for (int r = 0; r < row; r++) {
             for (int c = 0; c < col; c++) {
                 Piece piece = board.getPieceAt(c, r);
-                JLabel grid = (JLabel) gridPanel.getComponent(c + r * col);
+                grid = (JLabel) gridPanel.getComponent(c + r * col);
 
                 if (piece == null) {
                     if (grid.getIcon() != null) {
@@ -113,9 +114,25 @@ public class ChessView {
                     image = pieceImageType.getImage(piece.getColor());
                 }
 
-                Image scaledImage = image.getScaledInstance(grid.getWidth(), grid.getWidth(), java.awt.Image.SCALE_SMOOTH);
+                Image scaledImage = image.getScaledInstance(getGridWidth(), getGridHeight(), java.awt.Image.SCALE_SMOOTH);
                 grid.setIcon(new ImageIcon(scaledImage));
             }
         }
+    }
+
+    public static int getGridWidth() {
+        return grid.getWidth();
+    }
+
+    public static int getGridHeight() {
+        return grid.getHeight();
+    }
+
+    public static void setGridWidth(int width) {
+        grid.setPreferredSize(new Dimension(width, grid.getHeight()));
+    }
+
+    public static void setGridHeight(int height) {
+        grid.setPreferredSize(new Dimension(grid.getWidth(), height));
     }
 }

@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Melody Koh
 
 package ChessPiece;
 
@@ -46,7 +46,22 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract boolean isMovableTo(Board board, int x, int y);
-    public abstract void moveTo(Board board, int x, int y);
+    public static boolean isMovableTo(Board board, Piece p, int x, int y) {
+        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
+            return false;
+        }
+        return true;
+    };
+    
+    public void movePiece(Board board, int newX, int newY) {
+        if (isMovableTo(board, this, newX, newY)) {
+            board.removePiece(this);
+            this.setX(newX);
+            this.setY(newY);
+            board.setPieceAt(this, newX, newY);
+        } else {
+            return;
+        }
+    }
 
 }

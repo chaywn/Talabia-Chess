@@ -1,6 +1,9 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Melody Koh
 
 package Chess;
+
+import Board.Board;
+import ChessPiece.Piece;
 
 public class ChessController {
     Chess chessModel;
@@ -22,6 +25,11 @@ public class ChessController {
     }
 
     public void viewUpdatePieceIcons() {
+        chessView.updatePieceIcons(chessModel.getBoard());
+    }
+
+    public void movePieceIcons(Board board, Piece p, int newX, int newY) {
+        p.movePiece(board, newX, newY);
         chessView.updatePieceIcons(chessModel.getBoard());
     }
 
