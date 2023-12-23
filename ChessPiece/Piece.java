@@ -34,7 +34,6 @@ public abstract class Piece {
 
     // Getters, Setters
     public PieceType getPieceType() { return type; }
-    public PieceType setPieceType(PieceType type) { return this.type = type; }
     public Color getColor() { return color; }
     public boolean isFlipped() { return flipped; }
     public int getX() { return x; }
@@ -52,7 +51,7 @@ public abstract class Piece {
     
     public void movePiece(Board board, Player p, int newX, int newY) {
         if (isMovableTo(board, this, newX, newY)) {
-            board.removePieceIcon(this, p);
+            board.removePiece(this, p);
             this.setX(newX);
             this.setY(newY);
             board.setPieceAt(this, newX, newY);

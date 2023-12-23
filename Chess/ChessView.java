@@ -49,10 +49,8 @@ public class ChessView {
         frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));;
     }
 
-    public void movePieces (ChessController chessController) {
+    public void addMouseListener (Board board) {
         Main.gridPanel.addMouseListener(new MouseListener() {
-            Board board = chessController.getModelBoard();
-
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -65,14 +63,15 @@ public class ChessView {
             
             @Override
             public void mouseReleased(MouseEvent e) {
-                Player p = chessController.getModelPlayer(chessController.getModelPlayerTurn());
+                int playerTurn = selectedPiece.getColor() == Color.YELLOW ? 0 : 1;
+                Player p = Main.getPlayer(playerTurn);
                 selectedPiece.movePiece(board, p, e.getX()/getGridWidth(), e.getY()/getGridHeight());
                 if ((p.getPlayCount(0) == 2) && (p.getPlayCount(1) == 2)) {
-                    chessController.modelSwitchTimePlusPiece();
+                    board.switchTimePlusPiece(p);
                     p.setPlayCount(0, 0);
                     p.setPlayCount(1, 0);
-                } 
-                chessController.viewUpdatePieceIcons();
+                }
+                updatePieceIcons(board);
             }
 
             @Override

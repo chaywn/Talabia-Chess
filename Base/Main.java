@@ -5,6 +5,8 @@ package Base;
 import Chess.Chess;
 import Chess.ChessController;
 import Chess.ChessView;
+import Player.Player;
+import Board.Board;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,7 +26,7 @@ public class Main extends JFrame{
     public static int GRID_SIZE = 50;
 
     // Chess MVC components
-    private Chess chess;
+    private static Chess chess;
     private ChessView chessView;
     ChessController chessController;
     
@@ -43,6 +45,10 @@ public class Main extends JFrame{
 
     public JLabel getPlayerTurnLabel() {
         return (JLabel) sidePanel.getComponent(0);
+    }
+
+    public static Player getPlayer(int index) {
+        return chess.getPlayer(index);
     }
 
     Main() {
@@ -130,7 +136,8 @@ public class Main extends JFrame{
             }
         });
 
-        chessView.movePieces(chessController);
+        Board board = chess.getBoard();
+        chessView.addMouseListener(board);
         
         add(mainPanel);
         addComponentListener(new ResizeComponentListener());

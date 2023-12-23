@@ -3,6 +3,8 @@
 
 package Board;
 import ChessPiece.Piece;
+import ChessPiece.Plus;
+import ChessPiece.Time;
 import Player.Player;
 
 import java.util.HashSet;
@@ -32,7 +34,7 @@ public class Board {
     }
 
     // Remove the specified piece from the board
-    public void removePieceIcon(Piece piece, Player player) {
+    public void removePiece(Piece piece, Player player) {
         if (pieces[piece.getY()][piece.getX()] == null) {
             return;
         } else {
@@ -50,14 +52,24 @@ public class Board {
     }
 
     // switch Time piece and Plus piece, and vice versa
-    public void switchTimePlusPiece() {
+    public void switchTimePlusPiece(Player player) {
         for (int c = 0; c < noOfColumn; c++) {
             for (int r = 0; r < noOfRow; r++) {
                 if (pieces[r][c] != null) {
                     if (pieces[r][c].getPieceType() == Piece.PieceType.Time) {
-                        pieces[r][c].setPieceType(Piece.PieceType.Plus);
+                        player.removePiece(pieces[r][c]);
+                        Piece p2 = new Plus(pieces[r][c].getX(), pieces[r][c].getY(), pieces[r][c].getColor(), false);
+                        player.addPiece(p2);
+                        pieces[r][c] = p2;
+                        p2.setX(pieces[r][c].getX());
+                        p2.setY(pieces[r][c].getY());
                     } else if (pieces[r][c].getPieceType() == Piece.PieceType.Plus) {
-                        pieces[r][c].setPieceType(Piece.PieceType.Time);
+                        player.removePiece(pieces[r][c]);
+                        Piece p2 = new Time(pieces[r][c].getX(), pieces[r][c].getY(), pieces[r][c].getColor(), false);
+                        player.addPiece(p2);
+                        pieces[r][c] = p2;
+                        p2.setX(pieces[r][c].getX());
+                        p2.setY(pieces[r][c].getY());
                     }
                 }
             }
