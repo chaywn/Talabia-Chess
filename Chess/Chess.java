@@ -35,4 +35,8 @@ public class Chess {
         playerTurn = playerTurn == 1 ? 0 : 1;
         board.flip();
     }
+
+    public void switchTimePlusPiece() {
+        board.switchTimePlusPiece();
+    }
 }

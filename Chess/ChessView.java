@@ -6,13 +6,16 @@ import Base.Main;
 import Board.Board;
 import ChessPiece.Piece;
 import ChessPiece.Piece.PieceType;
+import Player.Player;
 
 import java.util.HashMap;
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class ChessView {
     private Main frame;
+    private static Piece selectedPiece;
     private static JLabel grid = new JLabel();
 
     private enum PieceImageType {
@@ -46,6 +49,44 @@ public class ChessView {
         frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));;
     }
 
+    public void movePieces (ChessController chessController) {
+        Main.gridPanel.addMouseListener(new MouseListener() {
+            Board board = chessController.getModelBoard();
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selectedPiece = board.getPieceAt(e.getX()/getGridWidth(), e.getY()/getGridHeight());
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Player p = chessController.getModelPlayer(chessController.getModelPlayerTurn());
+                selectedPiece.movePiece(board, p, e.getX()/getGridWidth(), e.getY()/getGridHeight());
+                if ((p.getPlayCount(0) == 2) && (p.getPlayCount(1) == 2)) {
+                    chessController.modelSwitchTimePlusPiece();
+                    p.setPlayCount(0, 0);
+                    p.setPlayCount(1, 0);
+                } 
+                chessController.viewUpdatePieceIcons();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+    }
+
     public void loadPieceIcons(Board board) {
         JPanel gridPanel = frame.getGridPanel();
 
@@ -58,8 +99,8 @@ public class ChessView {
                 grid = new JLabel();
                 
                 grid.setOpaque(true);
-                setGridWidth(frame.GRID_SIZE);
-                setGridHeight(frame.GRID_SIZE);
+                setGridWidth(grid.getWidth());
+                setGridHeight(grid.getHeight());
                 grid.setHorizontalAlignment(JLabel.CENTER);
 
                 if (piece != null) {
@@ -116,6 +157,8 @@ public class ChessView {
 
                 Image scaledImage = image.getScaledInstance(getGridWidth(), getGridHeight(), java.awt.Image.SCALE_SMOOTH);
                 grid.setIcon(new ImageIcon(scaledImage));
+                piece.setX(c);
+                piece.setY(r);
             }
         }
     }

@@ -32,10 +32,11 @@ public class Board {
     }
 
     // Remove the specified piece from the board
-    public void removePiece(Piece piece) {
+    public void removePieceIcon(Piece piece, Player player) {
         if (pieces[piece.getY()][piece.getX()] == null) {
             return;
         } else {
+            player.removePiece(piece);
             pieces[piece.getY()][piece.getX()] = null;
         }
     }
@@ -50,7 +51,17 @@ public class Board {
 
     // switch Time piece and Plus piece, and vice versa
     public void switchTimePlusPiece() {
-        // TODO
+        for (int c = 0; c < noOfColumn; c++) {
+            for (int r = 0; r < noOfRow; r++) {
+                if (pieces[r][c] != null) {
+                    if (pieces[r][c].getPieceType() == Piece.PieceType.Time) {
+                        pieces[r][c].setPieceType(Piece.PieceType.Plus);
+                    } else if (pieces[r][c].getPieceType() == Piece.PieceType.Plus) {
+                        pieces[r][c].setPieceType(Piece.PieceType.Time);
+                    }
+                }
+            }
+        }
     }
 
     // flip the board to see from the other side

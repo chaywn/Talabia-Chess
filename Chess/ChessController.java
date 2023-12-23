@@ -3,7 +3,7 @@
 package Chess;
 
 import Board.Board;
-import ChessPiece.Piece;
+import Player.Player;
 
 public class ChessController {
     Chess chessModel;
@@ -20,6 +20,18 @@ public class ChessController {
         this.chessModel = chessModel;
     }
 
+    public Board getModelBoard() {
+        return chessModel.getBoard();
+    }
+
+    public Player getModelPlayer(int playerTurn) {
+        return chessModel.getPlayer(playerTurn);
+    }
+
+    public int getModelPlayerTurn() {
+        return chessModel.getPlayerTurn();
+    }
+
     public void viewLoadPieceIcons() {
         chessView.loadPieceIcons(chessModel.getBoard());
     }
@@ -27,15 +39,15 @@ public class ChessController {
     public void viewUpdatePieceIcons() {
         chessView.updatePieceIcons(chessModel.getBoard());
     }
-
-    public void movePieceIcons(Board board, Piece p, int newX, int newY) {
-        p.movePiece(board, newX, newY);
-        chessView.updatePieceIcons(chessModel.getBoard());
-    }
-
+    
     public void modelSwitchTurn() {
         chessModel.switchTurn();
         chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
+        chessView.updatePieceIcons(chessModel.getBoard());
+    }
+
+    public void modelSwitchTimePlusPiece() {
+        chessModel.switchTimePlusPiece();
         chessView.updatePieceIcons(chessModel.getBoard());
     }
 }

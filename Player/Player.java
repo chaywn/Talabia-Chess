@@ -10,6 +10,7 @@ import java.util.HashSet;
 public class Player {
     private static Color[] colors= {Color.YELLOW, Color.BLUE};
     private static int playerCount = 0;
+    private static int[] playCount = {0, 0};
 
     int index;
     Color color;
@@ -26,6 +27,18 @@ public class Player {
     public HashSet<Piece> getPieces() { return pieces; }
     public void setColor(Color color) { this.color = color; }
     public void setIndex(int index) { this.index = index; }
+    public int getPlayCount(int index) { 
+        if (index == 0)
+            return playCount[0];
+        else
+            return playCount[1];
+    }
+    public void setPlayCount(int index, int playCount) { 
+        if (index == 0)
+            Player.playCount[0] = playCount;
+        else
+            Player.playCount[1] = playCount;
+    }
 
     public void addPiece(Piece piece) {
         pieces.add(piece);

@@ -5,12 +5,9 @@ package Base;
 import Chess.Chess;
 import Chess.ChessController;
 import Chess.ChessView;
-import ChessPiece.Piece;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import Board.Board;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class Main extends JFrame{
@@ -40,8 +36,6 @@ public class Main extends JFrame{
     public static int HEIGHT = 600;
     public static int initialX;
     public static int initialY;
-
-    public static Piece selectedPiece;
 
     public JPanel getGridPanel() {
         return gridPanel;
@@ -122,12 +116,12 @@ public class Main extends JFrame{
         gridPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (selectedPiece != null) {
+                // if (selectedPiece != null) {
                     // this part is not working, trying to figure it out
                     // selectedPiece.setX(e.getX() - (ChessView.getGridWidth()/2));
                     // selectedPiece.setY(e.getY() - (ChessView.getGridHeight()/2));
-                    // repaint();
-                }
+                //     repaint();
+                // }
             }
 
             @Override
@@ -136,36 +130,7 @@ public class Main extends JFrame{
             }
         });
 
-        gridPanel.addMouseListener(new MouseListener() {
-            Board board = chess.getBoard();
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                selectedPiece = board.getPieceAt((e.getX()/ChessView.getGridWidth()), (e.getY()/ChessView.getGridHeight()));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                chessController.movePieceIcons(board, selectedPiece, (e.getX() /ChessView.getGridWidth()), (e.getY() /ChessView.getGridHeight()));
-                repaint();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-
-        });
+        chessView.movePieces(chessController);
         
         add(mainPanel);
         addComponentListener(new ResizeComponentListener());

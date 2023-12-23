@@ -3,6 +3,7 @@
 package ChessPiece;
 
 import Board.Board;
+import Player.Player;
 import java.awt.*;
 
 public abstract class Piece {
@@ -33,6 +34,7 @@ public abstract class Piece {
 
     // Getters, Setters
     public PieceType getPieceType() { return type; }
+    public PieceType setPieceType(PieceType type) { return this.type = type; }
     public Color getColor() { return color; }
     public boolean isFlipped() { return flipped; }
     public int getX() { return x; }
@@ -46,19 +48,15 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public static boolean isMovableTo(Board board, Piece p, int x, int y) {
-        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
-            return false;
-        }
-        return true;
-    };
+    public abstract boolean isMovableTo(Board board, Piece p, int x, int y);
     
-    public void movePiece(Board board, int newX, int newY) {
+    public void movePiece(Board board, Player p, int newX, int newY) {
         if (isMovableTo(board, this, newX, newY)) {
-            board.removePiece(this);
+            board.removePieceIcon(this, p);
             this.setX(newX);
             this.setY(newY);
             board.setPieceAt(this, newX, newY);
+            p.setPlayCount(p.getIndex(), p.getPlayCount(p.getIndex()) + 1);
         } else {
             return;
         }

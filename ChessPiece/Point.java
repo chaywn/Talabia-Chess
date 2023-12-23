@@ -13,8 +13,11 @@ public class Point extends Piece{
     }
 
     @Override
-    public boolean isMovableTo(Board board, int x, int y) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isMovableTo(Board board, Piece p, int x, int y) {
+        //testing purpose
+        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
+            return false;
+        }
+        return true;
     }
 }
