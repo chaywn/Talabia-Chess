@@ -1,4 +1,4 @@
-// Coding Member:
+// Coding Member: Goh Shi Yi, Choo Yun Yi
 
 package ChessPiece;
 
@@ -6,7 +6,7 @@ import java.awt.*;
 
 import Board.Board;
 
-public class Sun extends Piece{
+public class Sun extends Piece {
 
     public Sun(int x, int y, Color color, Boolean flipped) {
         super(x, y, color, flipped);
@@ -14,10 +14,12 @@ public class Sun extends Piece{
 
     @Override
     public boolean isMovableTo(Board board, Piece p, int x, int y) {
-        // testing purpose
-        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
-            return false;
+        if ((Math.abs(p.getX() - x) == 1 && (Math.abs(p.getY() - y) == 0 || Math.abs(p.getY() - y) == 1) )|| Math.abs(p.getY() - y) == 1 && (Math.abs(p.getX() - x) == 0 || Math.abs(p.getX() - x) == 1)) { //can move only one step in any direction
+            if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 }

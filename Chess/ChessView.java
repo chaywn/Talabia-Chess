@@ -113,7 +113,7 @@ public class ChessView {
                         image = pieceImageType.getImage(piece.getColor());
                     }
 
-                    Image scaledImage = image.getScaledInstance(frame.GRID_SIZE, frame.GRID_SIZE, java.awt.Image.SCALE_SMOOTH);
+                    Image scaledImage = image.getScaledInstance(Main.GRID_SIZE, Main.GRID_SIZE, java.awt.Image.SCALE_SMOOTH);
                     grid.setIcon(new ImageIcon(scaledImage));
                 }
             

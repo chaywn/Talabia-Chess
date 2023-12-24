@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning, Melody Koh
+// Coding Member: Chay Wen Ning, Melody Koh, Goh Shi Yi
 
 package Base;
 
@@ -19,7 +19,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class Main extends JFrame{
+public class Main extends JFrame {
     // Constants
     public final int NO_OF_ROW = 6;
     public final int NO_OF_COLUMN = 7;
@@ -29,7 +29,7 @@ public class Main extends JFrame{
     private static Chess chess;
     private ChessView chessView;
     ChessController chessController;
-    
+
     public JPanel mainPanel;
     public JPanel gamePanel;
     public static JPanel gridPanel;
@@ -38,6 +38,7 @@ public class Main extends JFrame{
     public static int HEIGHT = 600;
     public static int initialX;
     public static int initialY;
+    public boolean gameStarted=false;
 
     public JPanel getGridPanel() {
         return gridPanel;
@@ -56,8 +57,6 @@ public class Main extends JFrame{
         chess = new Chess();
         chessView = new ChessView(this);
         chessController = new ChessController(chess, chessView);
-    
-
 
         // Initialize panels
         mainPanel = new JPanel(new BorderLayout());
@@ -66,7 +65,6 @@ public class Main extends JFrame{
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-
         // Game Panel
         gridPanel = new JPanel(new GridLayout(NO_OF_ROW, NO_OF_COLUMN)) {
             @Override // Overriding preferred size to always oblige to aspect ratio
@@ -74,7 +72,7 @@ public class Main extends JFrame{
                 Dimension d = this.getParent().getSize();
                 int newSize = d.width > d.height ? d.height : d.width;
                 newSize = newSize == 0 ? 100 : newSize;
-                
+
                 return new Dimension((int) (newSize * 1.2), newSize);
             }
         };
@@ -83,13 +81,26 @@ public class Main extends JFrame{
 
         gamePanel.setBackground(Color.DARK_GRAY);
         gamePanel.add(gridPanel);
-        
-
 
         // Side Panel
         JLabel playerTurnLabel = new JLabel("Player's Turn: 1");
         playerTurnLabel.setHorizontalAlignment(JLabel.LEFT);
         playerTurnLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton startBtn = new JButton("Start Game");
+        startBtn.setFocusable(false);
+        startBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        startBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startBtn.setEnabled(false);
+                gameStarted=true;
+                JOptionPane.showMessageDialog(mainPanel,"Start The Game !");
+                Board board = chess.getBoard();
+                chessView.addMouseListener(board);
+
+            }
+        });
 
         JButton switchBtn = new JButton("Switch Turn (for testing purposes)");
         switchBtn.setFocusable(false);
@@ -99,7 +110,27 @@ public class Main extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 chessController.modelSwitchTurn();
             }
-        }); 
+        });
+
+        JButton saveBtn = new JButton("Save Game");
+        saveBtn.setFocusable(false);
+        saveBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //to be added
+            }
+        });
+        JButton loadBtn = new JButton("Load Game");
+        loadBtn.setFocusable(false);
+        loadBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //to be added
+            }
+        });
+
         JButton exitBtn = new JButton("Exit Game");
         exitBtn.setFocusable(false);
         exitBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -112,7 +143,13 @@ public class Main extends JFrame{
 
         sidePanel.add(playerTurnLabel);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        sidePanel.add(startBtn);
+        sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(switchBtn);
+        sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        sidePanel.add(saveBtn);
+        sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        sidePanel.add(loadBtn);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(exitBtn);
 
@@ -123,10 +160,10 @@ public class Main extends JFrame{
             @Override
             public void mouseDragged(MouseEvent e) {
                 // if (selectedPiece != null) {
-                    // this part is not working, trying to figure it out
-                    // selectedPiece.setX(e.getX() - (ChessView.getGridWidth()/2));
-                    // selectedPiece.setY(e.getY() - (ChessView.getGridHeight()/2));
-                //     repaint();
+                // this part is not working, trying to figure it out
+                // selectedPiece.setX(e.getX() - (ChessView.getGridWidth()/2));
+                // selectedPiece.setY(e.getY() - (ChessView.getGridHeight()/2));
+                // repaint();
                 // }
             }
 
@@ -136,27 +173,30 @@ public class Main extends JFrame{
             }
         });
 
-        Board board = chess.getBoard();
-        chessView.addMouseListener(board);
-        
         add(mainPanel);
         addComponentListener(new ResizeComponentListener());
 
-        pack(); 
+        pack();
         setVisible(true);
-        setMinimumSize(new Dimension(NO_OF_COLUMN * GRID_SIZE + sidePanel.getWidth() + 138, NO_OF_ROW * GRID_SIZE + 120));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);      
+        setMinimumSize(
+                new Dimension(NO_OF_COLUMN * GRID_SIZE + sidePanel.getWidth() + 138, NO_OF_ROW * GRID_SIZE + 120));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private class ResizeComponentListener extends ComponentAdapter {
-            public void componentHidden(ComponentEvent e) {}
-            public void componentMoved(ComponentEvent e) {}
-            public void componentShown(ComponentEvent e) {}
+        public void componentHidden(ComponentEvent e) {
+        }
 
-            @Override
-            public void componentResized(ComponentEvent e) {
-                chessController.viewUpdatePieceIcons();
-            }
+        public void componentMoved(ComponentEvent e) {
+        }
+
+        public void componentShown(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            chessController.viewUpdatePieceIcons();
+        }
     }
 
     public static void main(String[] args) {
