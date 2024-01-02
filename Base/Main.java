@@ -5,8 +5,6 @@ package Base;
 import Chess.Chess;
 import Chess.ChessController;
 import Chess.ChessView;
-import Player.Player;
-import Board.Board;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,49 +12,48 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class Main extends JFrame {
     // Constants
     public final int NO_OF_ROW = 6;
     public final int NO_OF_COLUMN = 7;
-    public static int GRID_SIZE = 50;
+    public final int GRID_SIZE = 50;
 
-    // Chess MVC components
-    private static Chess chess;
-    private ChessView chessView;
-    ChessController chessController;
+    private final Color toPlayColor = Color.LIGHT_GRAY;
+    private final Color canPlayColor = Color.GREEN;
+    private final Color cannotPlayColor = Color.RED;
 
-    public JPanel mainPanel;
-    public JPanel gamePanel;
-    public static JPanel gridPanel;
-    public JPanel sidePanel;
-    public static int WIDTH = 800;
-    public static int HEIGHT = 600;
-    public static int initialX;
-    public static int initialY;
-    public boolean gameStarted=false;
+    private ChessController chessController;
 
-    public JPanel getGridPanel() {
-        return gridPanel;
-    }
+    private JPanel mainPanel;
+    private JPanel glassPane;
+    private JPanel gamePanel;
+    private JPanel gridPanel;
+    private JPanel sidePanel;
 
-    public JLabel getPlayerTurnLabel() {
-        return (JLabel) sidePanel.getComponent(0);
-    }
+    private JLabel playerTurnLabel;
+    private JLabel playerStatusLabel;
 
-    public static Player getPlayer(int index) {
-        return chess.getPlayer(index);
-    }
+    private JButton switchBtn;
+    private JButton saveBtn;
+
+    private boolean gameStarted = false;
+    
+    private JLabel gridToPlay;
+    private Color gridToPlayColor;
+    private Icon gridToPlayIcon;
+    private JLabel selectedGrid;
+    private Color selectedGridColor;
+    private Image selectedPieceImage;
+
+    private int[][] mouseDragPosition = new int[2][2];  // record source and destination
 
     Main() {
         // Initialize chess components
-        chess = new Chess();
-        chessView = new ChessView(this);
-        chessController = new ChessController(chess, chessView);
+        chessController = new ChessController(new Chess(), new ChessView(this));
 
         // Initialize panels
         mainPanel = new JPanel(new BorderLayout());
@@ -66,6 +63,76 @@ public class Main extends JFrame {
         sidePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         // Game Panel
+        createGamePanel();
+
+        // Side Panel
+        createSidePanel();
+
+
+        chessController.viewLoadPieceIcons();
+        chessController.viewAddPieceIconResizer();
+
+
+        // Glass Pane
+        // * for gray screen before game starts and for chess piece dragging
+        glassPane = new JPanel(){
+            public void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+                if (!gameStarted) {
+                    g.setColor(new Color(0,0,0,140));
+                    g.fillRect(0,0, gamePanel.getWidth(), gamePanel.getHeight());
+                    return;
+                }
+
+                if (selectedPieceImage != null) {
+                    g.drawImage(selectedPieceImage, mouseDragPosition[1][0] , mouseDragPosition[1][1] , Main.this);
+                }
+            }
+        };		
+        glassPane.setOpaque(false);
+
+        mainPanel.add(gamePanel, BorderLayout.CENTER);
+        mainPanel.add(sidePanel, BorderLayout.EAST);
+
+        add(mainPanel);
+        setGlassPane(glassPane);
+        glassPane.setVisible(true);
+
+        pack();
+        setVisible(true);
+        setMinimumSize(
+                new Dimension(NO_OF_COLUMN * GRID_SIZE + sidePanel.getWidth() + 138, NO_OF_ROW * GRID_SIZE + 120));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public JPanel getMaiPanel() { return mainPanel; }
+    public JPanel getGridPanel() { return gridPanel; }
+    public JPanel getGlassPane() { return glassPane; }
+    public JLabel getPlayerTurnLabel() { return playerTurnLabel; }
+    public JLabel getPlayerStatusLabel() { return playerStatusLabel; }
+    public JButton getSwitchBtn() { return switchBtn; }
+
+
+    public void reset() {    
+        if (gridToPlay != null) {
+            gridToPlay.setBackground(gridToPlayColor);
+            gridToPlay.setIcon(gridToPlayIcon);
+        }
+        gridToPlay = null;
+        gridToPlayColor = null;
+        gridToPlayIcon = null;
+
+        if (selectedGrid != null) {
+            selectedGrid.setBackground(selectedGridColor);
+        }
+        selectedGrid = null;
+        selectedGridColor = null;
+        selectedPieceImage = null;
+    }
+
+    public void createGamePanel() {
+        gamePanel.setBackground(Color.DARK_GRAY);
         gridPanel = new JPanel(new GridLayout(NO_OF_ROW, NO_OF_COLUMN)) {
             @Override // Overriding preferred size to always oblige to aspect ratio
             public Dimension getPreferredSize() {
@@ -77,47 +144,163 @@ public class Main extends JFrame {
             }
         };
         gridPanel.setBackground(Color.DARK_GRAY);
-        chessController.viewLoadPieceIcons();
+        gridPanel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
 
-        gamePanel.setBackground(Color.DARK_GRAY);
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!gameStarted || chessController.currentPlayerHasPlayed()) {
+                    Toolkit.getDefaultToolkit().beep();
+                    selectedPieceImage = null;
+                    return;
+                }
+                    
+                // set position (source)
+                mouseDragPosition[0][0] = e.getX();
+                mouseDragPosition[0][1] = e.getY();
+                // set position (destination)
+                mouseDragPosition[1][0] = e.getX();
+                mouseDragPosition[1][1] = e.getY();
+
+                gridToPlay = (JLabel) gridPanel.getComponentAt(e.getPoint());
+                gridToPlayColor = gridToPlay.getBackground();
+                gridToPlayIcon = gridToPlay.getIcon();
+
+                gridToPlay.setBackground(toPlayColor);
+                gridToPlay.setIcon(null);
+
+                selectedPieceImage = chessController.getSelectedPieceImage(mouseDragPosition[0][0], mouseDragPosition[0][1]);  
+                glassPane.repaint();
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!gameStarted || chessController.currentPlayerHasPlayed()) 
+                    return;
+
+                // set destination
+                mouseDragPosition[1][0] = e.getX();
+                mouseDragPosition[1][1] = e.getY();
+
+                if (selectedGrid != null) {
+                    selectedGrid.setBackground(selectedGridColor);
+                }
+
+                selectedPieceImage = null;
+                selectedGrid = null;
+
+                gridToPlay.setIcon(gridToPlayIcon);
+                gridToPlay.setBackground(gridToPlayColor);
+                gridToPlay = null;
+
+                glassPane.repaint();
+                chessController.relayPiecePositionToPlay(mouseDragPosition);
+            }
+        });
+        gridPanel.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (!gameStarted || chessController.currentPlayerHasPlayed() || selectedPieceImage == null) 
+                    return;
+
+                // restore old background color
+                if (selectedGrid != null) {
+                    selectedGrid.setBackground(selectedGridColor);
+                }
+
+                // Set destination as current mouse location
+                mouseDragPosition[1][0] = e.getX();
+                mouseDragPosition[1][1] = e.getY();
+
+                // set new selected grid and its background color
+                Point point = e.getPoint();
+                Point pointAdjust = new Point((int) (point.getX() + 2), (int) point.getY());
+                Component selectedComp = gridPanel.getComponentAt(pointAdjust);
+
+                if (selectedComp != null) {
+                    try {
+                        selectedGrid = (JLabel) selectedComp;
+                        selectedGridColor = selectedGrid.getBackground();
+
+                        int[] currentDestination = new int[2];
+                        currentDestination[0] = e.getX();
+                        currentDestination[1] = e.getY();
+                        Color playabilityColor = chessController.checkPiecePlayability(mouseDragPosition[0], currentDestination) ? canPlayColor : cannotPlayColor;
+                        selectedGrid.setBackground(playabilityColor);
+                    }
+                    catch (ClassCastException ev) {}
+                }
+            
+                glassPane.repaint();
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {}
+        });
+
         gamePanel.add(gridPanel);
+    }
 
-        // Side Panel
-        JLabel playerTurnLabel = new JLabel("Player's Turn: 1");
-        playerTurnLabel.setHorizontalAlignment(JLabel.LEFT);
-        playerTurnLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JButton startBtn = new JButton("Start Game");
+    public void createSidePanel() {
+        JButton startBtn = new JButton("New Game");
         startBtn.setFocusable(false);
         startBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         startBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startBtn.setEnabled(false);
-                gameStarted=true;
-                JOptionPane.showMessageDialog(mainPanel,"Start The Game !");
-                Board board = chess.getBoard();
-                chessView.addMouseListener(board);
+                if (!gameStarted) {
+                    gameStarted=true;
+                    saveBtn.setEnabled(true);
+                    glassPane.repaint();
 
+                    chessController.viewUpdatePlayerTurn();
+                    chessController.viewUpdatePlayerStatus();
+                }
+                else {
+                    int opt = JOptionPane.showConfirmDialog(mainPanel, "Starting a new game will lose your current progress. Are you sure?", "New Game", JOptionPane.YES_NO_OPTION);
+                    if (opt == JOptionPane.YES_OPTION) {
+                        reset();
+                        chessController.newGame();
+                    }
+                }
             }
         });
 
-        JButton switchBtn = new JButton("Switch Turn (for testing purposes)");
+        playerTurnLabel = new JLabel("Player's Turn: ");
+        playerTurnLabel.setHorizontalAlignment(JLabel.LEFT);
+        playerTurnLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        playerStatusLabel = new JLabel("Has played: ");
+        playerStatusLabel.setHorizontalAlignment(JLabel.LEFT);
+        playerStatusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        switchBtn = new JButton("Switch Turn");
         switchBtn.setFocusable(false);
+        switchBtn.setEnabled(false);
         switchBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         switchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                chessController.modelSwitchTurn();
+                if (!gameStarted) 
+                    return;
+                chessController.switchPlayerTurn();
             }
         });
 
-        JButton saveBtn = new JButton("Save Game");
+        saveBtn = new JButton("Save Game");
         saveBtn.setFocusable(false);
+        saveBtn.setEnabled(false);
         saveBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!gameStarted) 
+                    return;
                 //to be added
             }
         });
@@ -137,13 +320,17 @@ public class Main extends JFrame {
         exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                int opt = JOptionPane.showConfirmDialog(mainPanel, "Exiting the game will lose your current progress. Are you sure?", "New Game", JOptionPane.YES_NO_OPTION);
+                if (opt == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
             }
         });
 
-        sidePanel.add(playerTurnLabel);
-        sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(startBtn);
+        sidePanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        sidePanel.add(playerTurnLabel);
+        sidePanel.add(playerStatusLabel);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(switchBtn);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -152,51 +339,6 @@ public class Main extends JFrame {
         sidePanel.add(loadBtn);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(exitBtn);
-
-        mainPanel.add(gamePanel, BorderLayout.CENTER);
-        mainPanel.add(sidePanel, BorderLayout.EAST);
-
-        gridPanel.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // if (selectedPiece != null) {
-                // this part is not working, trying to figure it out
-                // selectedPiece.setX(e.getX() - (ChessView.getGridWidth()/2));
-                // selectedPiece.setY(e.getY() - (ChessView.getGridHeight()/2));
-                // repaint();
-                // }
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
-        });
-
-        add(mainPanel);
-        addComponentListener(new ResizeComponentListener());
-
-        pack();
-        setVisible(true);
-        setMinimumSize(
-                new Dimension(NO_OF_COLUMN * GRID_SIZE + sidePanel.getWidth() + 138, NO_OF_ROW * GRID_SIZE + 120));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    private class ResizeComponentListener extends ComponentAdapter {
-        public void componentHidden(ComponentEvent e) {
-        }
-
-        public void componentMoved(ComponentEvent e) {
-        }
-
-        public void componentShown(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentResized(ComponentEvent e) {
-            chessController.viewUpdatePieceIcons();
-        }
     }
 
     public static void main(String[] args) {

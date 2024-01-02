@@ -10,15 +10,19 @@ import java.util.HashSet;
 public class Player {
     private static Color[] colors= {Color.YELLOW, Color.BLUE};
     private static int playerCount = 0;
-    private static int[] playCount = {0, 0};
 
-    int index;
-    Color color;
-    HashSet<Piece> pieces = new HashSet<>();
+    private int index;
+    private Color color;
+    private HashSet<Piece> pieces = new HashSet<>();
+
+    private int playCount;
+    private boolean hasPlayed;
 
     public Player() {
         this.index = playerCount++;
         this.color = colors[index];
+        playCount = 0;
+        hasPlayed = false;
     }
 
     // Getters and Setters
@@ -26,18 +30,21 @@ public class Player {
     public int getIndex() { return index; }
     public HashSet<Piece> getPieces() { return pieces; }
     public void setColor(Color color) { this.color = color; }
+    public int getPlayCount() { return playCount; }
     public void setIndex(int index) { this.index = index; }
-    public int getPlayCount(int index) { 
-        if (index == 0)
-            return playCount[0];
-        else
-            return playCount[1];
+    public boolean hasPlayed() { return hasPlayed; }
+    public void setHasPlayed(boolean hasPlayed) { this.hasPlayed = hasPlayed; }
+    
+    public void incrementPlayCount() {
+        playCount++;
     }
-    public void setPlayCount(int index, int playCount) { 
-        if (index == 0)
-            Player.playCount[0] = playCount;
-        else
-            Player.playCount[1] = playCount;
+
+    public void resetPlayCount() { 
+        playCount = 0; 
+    }
+
+    public void resetHasPlayed() {
+        hasPlayed = false;
     }
 
     public void addPiece(Piece piece) {
@@ -45,8 +52,9 @@ public class Player {
     }
 
     public void removePiece(Piece piece) {
-        if (pieces.contains(piece))
+        if (pieces.contains(piece)) {
             pieces.remove(piece);
+        }
     }
 
     public void initializePieces(Board board, int offsetX, int offsetY, boolean opposite) {

@@ -3,7 +3,6 @@
 package ChessPiece;
 
 import Board.Board;
-import Player.Player;
 import java.awt.*;
 
 public abstract class Piece {
@@ -48,17 +47,12 @@ public abstract class Piece {
     }
 
     public abstract boolean isMovableTo(Board board, Piece p, int x, int y);
-    
-    public void movePiece(Board board, Player p, int newX, int newY) {
-        if (isMovableTo(board, this, newX, newY)) {
-            board.removePiece(this, p);
-            this.setX(newX);
-            this.setY(newY);
-            board.setPieceAt(this, newX, newY);
-            p.setPlayCount(p.getIndex(), p.getPlayCount(p.getIndex()) + 1);
-        } else {
-            return;
-        }
+
+    public Piece toPlus() {
+        return new Plus(x, y, color, flipped);
     }
 
+    public Piece toTime() {
+        return new Time(x, y, color, flipped);
+    }
 }

@@ -6,8 +6,6 @@ import Base.Main;
 import Board.Board;
 import ChessPiece.Piece;
 import ChessPiece.Piece.PieceType;
-import Player.Player;
-
 import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,8 +13,9 @@ import javax.swing.*;
 
 public class ChessView {
     private Main frame;
-    private static Piece selectedPiece;
-    private static JLabel grid = new JLabel();
+    private int gridSize;
+    private JLabel lastHighlightedGrid;
+    private Color lastHighlightedGridColor;
 
     private enum PieceImageType {
         Hourglass("Hourglass.png"),
@@ -43,45 +42,81 @@ public class ChessView {
 
     public ChessView(Main frame) {
         this.frame = frame;
+        gridSize = frame.GRID_SIZE;
     }
+
+    // Getter
+    public int getGridSize() { return gridSize; }
 
     public void updatePlayerTurnLabel(int playerTurn) {
-        frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));;
+        frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));
     }
 
-    public void addMouseListener (Board board) {
-        Main.gridPanel.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+    public void updatePlayerStatusLabel(boolean hasPlayed) {
+        frame.getPlayerStatusLabel().setText("Has played: " + hasPlayed);
+    }
 
-            }
+    public void setSwitchButtonEnabled(boolean enabled) {
+        frame.getSwitchBtn().setEnabled(enabled);
+    }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                selectedPiece = board.getPieceAt(e.getX()/getGridWidth(), e.getY()/getGridHeight());
+    public Image getPieceImage(Piece piece) {
+        if (piece == null) 
+            return null;
+
+        Image image;
+        if (piece.getPieceType() == PieceType.Point) {
+            image = piece.isFlipped() ? PieceImageType.PointDown.getImage(piece.getColor()) : PieceImageType.PointUp.getImage(piece.getColor());
+        }
+        else {
+            PieceImageType pieceImageType = PieceImageType.valueOf(piece.getPieceType().toString());
+            image = pieceImageType.getImage(piece.getColor());
+        }
+
+        return image.getScaledInstance(gridSize, gridSize, java.awt.Image.SCALE_SMOOTH);
+    }
+
+    public void updateGridSize() {
+        gridSize = frame.getGridPanel().getComponent(0).getWidth();
+    }
+
+    public void notifyPieceSwitch() {
+        JOptionPane.showMessageDialog(frame.getGridPanel(),"Time and Plus pieces will now switch!");
+    }
+
+    public boolean promptNewGame(int winnerIndex) {
+        int opt = JOptionPane.showConfirmDialog(frame, "Player " + (winnerIndex + 1) + " has won. Choose \"Yes\" to start a new game, \"No\" to quit game", "Game Over", JOptionPane.YES_NO_OPTION);
+        if (opt == JOptionPane.YES_OPTION) {
+            frame.reset();
+            return true;
+        }
+        else {  
+            System.exit(0);
+            return false;
+        }
+    }
+
+    public void addPieceIconResizer(Board board) {
+        // remove exising component listener
+        ComponentListener[] listeners = frame.getComponentListeners();
+        if (listeners.length > 0) {
+            for (ComponentListener li: listeners) {
+                frame.removeComponentListener(li);
             }
-            
+        }
+        // add new component listener
+        frame.addComponentListener(new ComponentAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e) {
-                int playerTurn = selectedPiece.getColor() == Color.YELLOW ? 0 : 1;
-                Player p = Main.getPlayer(playerTurn);
-                selectedPiece.movePiece(board, p, e.getX()/getGridWidth(), e.getY()/getGridHeight());
-                if ((p.getPlayCount(0) == 2) && (p.getPlayCount(1) == 2)) {
-                    board.switchTimePlusPiece(p);
-                    p.setPlayCount(0, 0);
-                    p.setPlayCount(1, 0);
-                }
+            public void componentHidden(ComponentEvent e) {}
+            @Override
+            public void componentMoved(ComponentEvent e) {}
+            @Override
+            public void componentShown(ComponentEvent e) {}
+    
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateGridSize();
                 updatePieceIcons(board);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
             }
         });
     }
@@ -95,26 +130,15 @@ public class ChessView {
         for (int r = 0; r < row; r++) {
             for (int c = 0; c < col; c++) {
                 Piece piece = board.getPieceAt(c, r);
-                grid = new JLabel();
+                JLabel grid = new JLabel();
                 
                 grid.setOpaque(true);
-                setGridWidth(grid.getWidth());
-                setGridHeight(grid.getHeight());
+                grid.setPreferredSize(new Dimension(gridSize, gridSize));
                 grid.setHorizontalAlignment(JLabel.CENTER);
 
                 if (piece != null) {
-                    Image image;
-
-                    if (piece.getPieceType() == PieceType.Point) {
-                        image = piece.isFlipped() ? PieceImageType.PointDown.getImage(piece.getColor()) : PieceImageType.PointUp.getImage(piece.getColor());
-                    }
-                    else {
-                        PieceImageType pieceImageType = PieceImageType.valueOf(piece.getPieceType().toString());
-                        image = pieceImageType.getImage(piece.getColor());
-                    }
-
-                    Image scaledImage = image.getScaledInstance(Main.GRID_SIZE, Main.GRID_SIZE, java.awt.Image.SCALE_SMOOTH);
-                    grid.setIcon(new ImageIcon(scaledImage));
+                    Image image = getPieceImage(piece);
+                    grid.setIcon(new ImageIcon(image));
                 }
             
                 if ((c + r) % 2 ==0) {
@@ -135,7 +159,7 @@ public class ChessView {
         for (int r = 0; r < row; r++) {
             for (int c = 0; c < col; c++) {
                 Piece piece = board.getPieceAt(c, r);
-                grid = (JLabel) gridPanel.getComponent(c + r * col);
+                JLabel grid = (JLabel) gridPanel.getComponent(c + r * col);
 
                 if (piece == null) {
                     if (grid.getIcon() != null) {
@@ -144,37 +168,30 @@ public class ChessView {
                     continue;
                 } 
 
-                Image image;
-
-                if (piece.getPieceType() == PieceType.Point) {
-                    image = piece.isFlipped() ? PieceImageType.PointDown.getImage(piece.getColor()) : PieceImageType.PointUp.getImage(piece.getColor());
-                }
-                else {
-                    PieceImageType pieceImageType = PieceImageType.valueOf(piece.getPieceType().toString());
-                    image = pieceImageType.getImage(piece.getColor());
-                }
-
-                Image scaledImage = image.getScaledInstance(getGridWidth(), getGridHeight(), java.awt.Image.SCALE_SMOOTH);
-                grid.setIcon(new ImageIcon(scaledImage));
+                Image image = getPieceImage(piece);
+                grid.setIcon(new ImageIcon(image));
                 piece.setX(c);
                 piece.setY(r);
             }
         }
     }
 
-    public static int getGridWidth() {
-        return grid.getWidth();
-    }
+    public void highlightLastMovedPiece(Board board, Piece lastMovedPiece) {
+        if (lastHighlightedGrid != null) {
+            lastHighlightedGrid.setBorder(null);
+            lastHighlightedGrid.setBackground(lastHighlightedGridColor);
+        }
 
-    public static int getGridHeight() {
-        return grid.getHeight();
-    }
+        if (lastMovedPiece == null) 
+            return;
 
-    public static void setGridWidth(int width) {
-        grid.setPreferredSize(new Dimension(width, grid.getHeight()));
-    }
-
-    public static void setGridHeight(int height) {
-        grid.setPreferredSize(new Dimension(grid.getWidth(), height));
+        JPanel gridPanel = frame.getGridPanel();
+        JLabel grid = (JLabel) gridPanel.getComponent(lastMovedPiece.getX() + lastMovedPiece.getY() * frame.NO_OF_COLUMN);
+        // grid.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.ORANGE));
+        
+        lastHighlightedGrid = grid;
+        lastHighlightedGridColor = grid.getBackground();
+        grid.setBackground(Color.ORANGE);
     }
 }
+

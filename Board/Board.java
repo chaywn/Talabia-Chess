@@ -3,8 +3,6 @@
 
 package Board;
 import ChessPiece.Piece;
-import ChessPiece.Plus;
-import ChessPiece.Time;
 import Player.Player;
 
 import java.util.HashSet;
@@ -22,7 +20,7 @@ public class Board {
     public int getNoOfColumn() { return noOfColumn; }
 
     public Piece getPieceAt(int x, int y) {
-        if (pieces[y][x] == null) 
+        if (x < 0 || x >= noOfColumn || y < 0 || y >= noOfRow) 
             return null;
 
         return pieces[y][x];
@@ -30,7 +28,9 @@ public class Board {
 
     // Set the specified piece on the board at the specified x, y coordinate
     public void setPieceAt(Piece piece, int x, int y) {
+        pieces[piece.getY()][piece.getX()] = null;
         pieces[y][x] = piece;
+        piece.setPosition(x, y);
     }
 
     // Remove the specified piece from the board
@@ -51,31 +51,6 @@ public class Board {
         }
     }
 
-    // switch Time piece and Plus piece, and vice versa
-    public void switchTimePlusPiece(Player player) {
-        for (int c = 0; c < noOfColumn; c++) {
-            for (int r = 0; r < noOfRow; r++) {
-                if (pieces[r][c] != null) {
-                    if (pieces[r][c].getPieceType() == Piece.PieceType.Time) {
-                        player.removePiece(pieces[r][c]);
-                        Piece p2 = new Plus(pieces[r][c].getX(), pieces[r][c].getY(), pieces[r][c].getColor(), false);
-                        player.addPiece(p2);
-                        pieces[r][c] = p2;
-                        p2.setX(pieces[r][c].getX());
-                        p2.setY(pieces[r][c].getY());
-                    } else if (pieces[r][c].getPieceType() == Piece.PieceType.Plus) {
-                        player.removePiece(pieces[r][c]);
-                        Piece p2 = new Time(pieces[r][c].getX(), pieces[r][c].getY(), pieces[r][c].getColor(), false);
-                        player.addPiece(p2);
-                        pieces[r][c] = p2;
-                        p2.setX(pieces[r][c].getX());
-                        p2.setY(pieces[r][c].getY());
-                    }
-                }
-            }
-        }
-    }
-
     // flip the board to see from the other side
     public void flip() {
         for (int c = 0; c < noOfColumn; c++) {
@@ -86,9 +61,11 @@ public class Board {
                 
                 if (temp != null) {
                     temp.setFlipped(!temp.isFlipped());
+                    temp.setPosition(noOfColumn -1 - c, noOfRow - 1 - r);
                 }
                 if (this.pieces[r][c] != null) {
                     this.pieces[r][c].setFlipped(!this.pieces[r][c].isFlipped());
+                    this.pieces[r][c].setPosition(noOfColumn - 1 - c, noOfRow - 1 - r);
                 }
             }
         }
