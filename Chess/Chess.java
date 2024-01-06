@@ -77,6 +77,7 @@ public class Chess {
         if (selectedPiece != null && !players[playerTurn].hasPlayed() && selectedPiece.getColor() == players[playerTurn].getColor() && (selectedPiece.getX() != destination[0] || selectedPiece.getY() != destination[1])) {
             return selectedPiece.isMovableTo(board, selectedPiece, destination[0], destination[1]);
         }
+
         return false;
     }
 
@@ -89,6 +90,11 @@ public class Chess {
         }
         
         board.setPieceAt(selectedPiece, x, y);
+        // if the piece is a Point piece and it reached the end, flip it
+        if (selectedPiece.getPieceType() == PieceType.Point && (y == 0 || y == board.getNoOfRow() - 1)) {
+            selectedPiece.setFlipped(!selectedPiece.isFlipped());            
+        }
+
         players[playerTurn].setHasPlayed(true);
         lastMovedPiece = selectedPiece;
         selectedPiece = null;

@@ -88,9 +88,9 @@ public class Main extends JFrame {
 
                 if (selectedPieceImage != null) {
                     Point p = MouseInfo.getPointerInfo().getLocation();
-                    g.fillOval((int) p.getX(), (int) p.getY(), 50, 50);
-                    g.fillRect(0, 0, 50, 50);
-                    g.fillRect((int) mouseDragPosition[1].getX(), (int) mouseDragPosition[1].getY(), selectedPieceImage.getWidth(Main.this), selectedPieceImage.getHeight(Main.this));
+                    // g.fillOval((int) p.getX(), (int) p.getY(), 50, 50);
+                    // g.fillRect(0, 0, 50, 50);
+                    // g.fillRect((int) mouseDragPosition[1].getX(), (int) mouseDragPosition[1].getY(), selectedPieceImage.getWidth(Main.this), selectedPieceImage.getHeight(Main.this));
                     g.drawImage(selectedPieceImage, (int) mouseDragPosition[1].getX() , (int) mouseDragPosition[1].getY() , Main.this);
                 }
             }
@@ -232,7 +232,7 @@ public class Main extends JFrame {
                     try {
                         selectedGrid = (JLabel) selectedComp;
                         selectedGridColor = selectedGrid.getBackground();
-
+                        // System.out.println(mouseDragPosition[0] + ", " + mouseDragPosition[1]);
                         Color playabilityColor = chessController.checkPiecePlayability(mouseDragPosition[0], mouseDragPosition[1]) ? canPlayColor : cannotPlayColor;
                         selectedGrid.setBackground(playabilityColor);
                     }

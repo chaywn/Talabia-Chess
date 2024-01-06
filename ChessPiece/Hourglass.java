@@ -14,10 +14,14 @@ public class Hourglass extends Piece{
 
     @Override
     public boolean isMovableTo(Board board, Piece p, int x, int y) {
-        // testing purpose
+        int xDistance = Math.abs(x - p.getX());
+        int yDistance = Math.abs(y - p.getY());
+
         if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
             return false;
         }
-        return true;
+
+        // Check for 3x2 L-shape move
+        return ((xDistance == 1 && yDistance == 2) || (xDistance == 2 && yDistance == 1));
     }
 }
