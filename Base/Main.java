@@ -49,7 +49,8 @@ public class Main extends JFrame {
     private Color selectedGridColor;
     private Image selectedPieceImage;
 
-    private int[][] mouseDragPosition = new int[2][2];  // record source and destination
+
+    private Point[] mouseDragPosition = new Point[2];  // record source and destination points
 
     Main() {
         // Initialize chess components
@@ -86,7 +87,11 @@ public class Main extends JFrame {
                 }
 
                 if (selectedPieceImage != null) {
-                    g.drawImage(selectedPieceImage, mouseDragPosition[1][0] , mouseDragPosition[1][1] , Main.this);
+                    Point p = MouseInfo.getPointerInfo().getLocation();
+                    g.fillOval((int) p.getX(), (int) p.getY(), 50, 50);
+                    g.fillRect(0, 0, 50, 50);
+                    g.fillRect((int) mouseDragPosition[1].getX(), (int) mouseDragPosition[1].getY(), selectedPieceImage.getWidth(Main.this), selectedPieceImage.getHeight(Main.this));
+                    g.drawImage(selectedPieceImage, (int) mouseDragPosition[1].getX() , (int) mouseDragPosition[1].getY() , Main.this);
                 }
             }
         };		
@@ -155,17 +160,18 @@ public class Main extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (!gameStarted || chessController.currentPlayerHasPlayed()) {
-                    Toolkit.getDefaultToolkit().beep();
                     selectedPieceImage = null;
                     return;
                 }
                     
                 // set position (source)
-                mouseDragPosition[0][0] = e.getX();
-                mouseDragPosition[0][1] = e.getY();
+                mouseDragPosition[0] = e.getPoint();
+
                 // set position (destination)
-                mouseDragPosition[1][0] = e.getX();
-                mouseDragPosition[1][1] = e.getY();
+                mouseDragPosition[1] = e.getPoint();
+
+                if (!chessController.checkPiecePlayability(mouseDragPosition[0])) 
+                    return;
 
                 gridToPlay = (JLabel) gridPanel.getComponentAt(e.getPoint());
                 gridToPlayColor = gridToPlay.getBackground();
@@ -174,7 +180,7 @@ public class Main extends JFrame {
                 gridToPlay.setBackground(toPlayColor);
                 gridToPlay.setIcon(null);
 
-                selectedPieceImage = chessController.getSelectedPieceImage(mouseDragPosition[0][0], mouseDragPosition[0][1]);  
+                selectedPieceImage = chessController.getSelectedPieceImage(mouseDragPosition[0]);  
                 glassPane.repaint();
             }
             
@@ -184,9 +190,8 @@ public class Main extends JFrame {
                     return;
 
                 // set destination
-                mouseDragPosition[1][0] = e.getX();
-                mouseDragPosition[1][1] = e.getY();
-
+                mouseDragPosition[1] = e.getPoint();
+                
                 if (selectedGrid != null) {
                     selectedGrid.setBackground(selectedGridColor);
                 }
@@ -194,10 +199,12 @@ public class Main extends JFrame {
                 selectedPieceImage = null;
                 selectedGrid = null;
 
-                gridToPlay.setIcon(gridToPlayIcon);
-                gridToPlay.setBackground(gridToPlayColor);
-                gridToPlay = null;
-
+                if (gridToPlay != null) {
+                    gridToPlay.setIcon(gridToPlayIcon);
+                    gridToPlay.setBackground(gridToPlayColor);
+                    gridToPlay = null;
+                }
+                
                 glassPane.repaint();
                 chessController.relayPiecePositionToPlay(mouseDragPosition);
             }
@@ -214,8 +221,7 @@ public class Main extends JFrame {
                 }
 
                 // Set destination as current mouse location
-                mouseDragPosition[1][0] = e.getX();
-                mouseDragPosition[1][1] = e.getY();
+                mouseDragPosition[1] = e.getPoint();
 
                 // set new selected grid and its background color
                 Point point = e.getPoint();
@@ -227,10 +233,7 @@ public class Main extends JFrame {
                         selectedGrid = (JLabel) selectedComp;
                         selectedGridColor = selectedGrid.getBackground();
 
-                        int[] currentDestination = new int[2];
-                        currentDestination[0] = e.getX();
-                        currentDestination[1] = e.getY();
-                        Color playabilityColor = chessController.checkPiecePlayability(mouseDragPosition[0], currentDestination) ? canPlayColor : cannotPlayColor;
+                        Color playabilityColor = chessController.checkPiecePlayability(mouseDragPosition[0], mouseDragPosition[1]) ? canPlayColor : cannotPlayColor;
                         selectedGrid.setBackground(playabilityColor);
                     }
                     catch (ClassCastException ev) {}

@@ -1,105 +1,58 @@
 import javax.swing.*;
-
-
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
+public class Test extends JFrame {
+    private BufferedImage image;
+    private Point mousePoint;
 
-import java.awt.event.*;
+    public Test() {
+        try {
+            // Load your image from a file
+            image = ImageIO.read(new File("Icons/BluePieces/Point(up).png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        // Set up JFrame
+        setTitle("Image Drawer");
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-class Test extends JFrame
-{
-    JButton b;
+        // Add mouse listener
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mousePoint = e.getPoint();
+                repaint();
+            }
 
-	public Test()
-	{
-		createAndShowGUI();
-	}
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mousePoint = e.getPoint();
+                repaint();
+            }
+        });
+    }
 
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (image != null && mousePoint != null) {
+            // Draw the image at the mouse position
+            g.drawImage(image, mousePoint.x, mousePoint.y, this);
+        }
+    }
 
-	private void createAndShowGUI()
-	{
-		setTitle("Block input");
-		setLayout(new FlowLayout());
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-
-		// Create JButton
-		b=new JButton("Block input");
-		add(b);
-
-		b.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent ae)
-			{
-				// Create a JPanel with semi-transparent
-				// black background
-
-				// This will be glass pane
-				JPanel p=new JPanel(){
-					public void paintComponent(Graphics g)
-
-
-					{
-						g.setColor(new Color(0,0,0,140));
-
-						g.fillRect(0,0,getWidth(),getHeight());
-					}
-
-
-				};		
-
-
-				// Set it non-opaque
-				p.setOpaque(false);
-
-				// Set layout to JPanel
-				p.setLayout(new GridBagLayout());				
-
-
-				// Add the jlabel with the image icon
-				// p.add(new JLabel(new ImageIcon("loading.gif")));
-
-
-				// Take glass pane
-				setGlassPane(p);
-
-
-				
-
-
-				// Add MouseListener
-				p.addMouseListener(new MouseAdapter(){
-					public void mousePressed(MouseEvent me)
-					{
-						// Consume the event, now the input is blocked
-						me.consume();
-
-						// Create beep sound, when mouse is pressed
-						Toolkit.getDefaultToolkit().beep();
-					}
-				});
-
-				
-
-
-				// Make it visible, it isn't by default because
-
-
-				// it is set as glass pane
-				p.setVisible(true);
-			}
-		});
-
-		setSize(400,400);
-		setVisible(true);
-		setLocationRelativeTo(null);
-	}
-
-
-	public static void main(String args[])
-	{
-		new Test();
-	}
-
-
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Test imageDrawer = new Test();
+            imageDrawer.setVisible(true);
+        });
+    }
 }

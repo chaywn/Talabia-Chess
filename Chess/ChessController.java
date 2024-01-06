@@ -6,7 +6,7 @@ import ChessPiece.Piece;
 import Player.Player;
 
 import java.awt.Image;
-import java.util.Arrays;
+import java.awt.Point;
 
 public class ChessController {
     Chess chessModel;
@@ -41,10 +41,10 @@ public class ChessController {
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
 
-    public Image getSelectedPieceImage(int relX, int relY) {
+    public Image getSelectedPieceImage(Point point) {
         // Convert relative coordinate to board coordinate
-        int x = relX / chessView.getGridSize();
-        int y = relY / chessView.getGridSize();
+        int x = (int) point.getX() / chessView.getGridSize();
+        int y = (int) point.getY() / chessView.getGridSize();
 
         Piece selectedPiece = chessModel.getBoard().getPieceAt(x, y);
 
@@ -70,26 +70,38 @@ public class ChessController {
         }
     }
 
-    public boolean checkPiecePlayability(int[] source, int[] destination) {
-        int[] sourceCopy = Arrays.copyOf(source, source.length);
-        int[] destinationCopy = Arrays.copyOf(destination, destination.length);
+    public boolean checkPiecePlayability(Point sourcePoint, Point destinationPoint) {
+        int[] source = new int[2];
+        int[] destination = new int[2];
 
         // Convert relative coordinate to board coordinate
-        for (int i = 0; i < source.length; i++) {
-            sourceCopy[i] = sourceCopy[i] / chessView.getGridSize();
-            destinationCopy[i] = destinationCopy[i] / chessView.getGridSize();
-        }
+        source[0] = (int) (sourcePoint.getX() / chessView.getGridSize());
+        source[1] = (int) (sourcePoint.getY() / chessView.getGridSize());
+        destination[0] = (int) (destinationPoint.getX() / chessView.getGridSize());
+        destination[1] = (int) (destinationPoint.getY() / chessView.getGridSize());
 
-        return chessModel.checkPieceMove(sourceCopy, destinationCopy);
+        return chessModel.checkPieceMove(source, destination);
+    }
+
+    public boolean checkPiecePlayability(Point piecePoint) {
+        int[] pos = new int[2];
+
+        // Convert relative coordinate to board coordinate
+        pos[0] = (int) (piecePoint.getX() / chessView.getGridSize());
+        pos[1] = (int) (piecePoint.getY() / chessView.getGridSize());
+
+        Piece p = chessModel.getBoard().getPieceAt(pos[0], pos[1]);
+
+        return p.getColor() == chessModel.getPlayer(chessModel.getPlayerTurn()).getColor();
     }
 
     // Get the piece's coordinate and send it to the chess model to check/play
-    public void relayPiecePositionToPlay(int[][] sourceDestination) {
-        int[] source = sourceDestination[0];
-        int[] destination = sourceDestination[1];
+    public void relayPiecePositionToPlay(Point[] sourceDestination) {
+        Point sourcePoint = sourceDestination[0];
+        Point destinationPoint = sourceDestination[1];
     
-        if (checkPiecePlayability(source, destination)) {
-            chessModel.playPieceMove(destination[0] / chessView.getGridSize(), destination[1] / chessView.getGridSize());
+        if (checkPiecePlayability(sourcePoint, destinationPoint)) {
+            chessModel.playPieceMove((int) (destinationPoint.getX() / chessView.getGridSize()), (int) (destinationPoint.getY() / chessView.getGridSize()));
 
             chessView.updatePieceIcons(chessModel.getBoard());
             chessView.updatePlayerStatusLabel(true);
