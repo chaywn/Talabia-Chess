@@ -1,15 +1,10 @@
 // Coding Member: 
 
-package ChessPiece; // Assuming the 'Chess' package
+package ChessPiece;
 
 import java.awt.*;
 
 import Board.Board;
-<<<<<<< HEAD
-
-public class Hourglass extends Piece {
-=======
->>>>>>> parent of d40ab93 (Update Hourglass.java)
 
 public class Hourglass extends Piece{
     
