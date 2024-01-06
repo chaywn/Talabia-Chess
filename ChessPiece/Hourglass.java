@@ -4,6 +4,8 @@ package Chess; // Assuming the 'Chess' package
 
 import java.awt.Image;
 
+import Board.Board;
+
 public class Hourglass extends Piece {
 
     public Hourglass(int x, int y, boolean isWhite, Image image) {
