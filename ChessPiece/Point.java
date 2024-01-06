@@ -1,30 +1,45 @@
 // Coding Member: Goh Shi Yi, Choo Yun Yi
 
 
-package Chess;
-
-import java.awt.*;
+package ChessPiece;
 
 import Board.Board;
+import java.awt.*;
 
 public class Point extends Piece {
-    private boolean isMovingForward;
 
-    public Point(int x, int y, boolean isWhite) {
-        super(x, y, isWhite);
-        this.isMovingForward = true;
+    public Point(int x, int y, Color color, boolean flipped) {
+        super(x, y, color, flipped);
     }
 
     @Override
-    public boolean canMove(Board board, int targetX, int targetY) {
-        // Implement specific move logic for Point
+    public boolean isMovableTo(Board board, Piece p, int x, int y) {
+        // Check if the move is only vertical and within 1 or 2 steps
+        int yDistance = Math.abs(y - this.getY());
+        if (yDistance > 0 && yDistance <= 2) {
+          
+            int direction = isFlipped() ? -1 : 1;
+            
+           
+            if ((y - this.getY()) == yDistance * direction) {
+                
+                for (int i = 1; i <= yDistance; i++) {
+                    if (board.isSpotOccupied(this.getX(), this.getY() + i * direction)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
-    @Override
+    // Flip the piece when it reaches the end of the board
     public void move(int x, int y) {
-        super.move(x, y); // Call the move method of the superclass
-
-        // Additional logic specific to Point, if any
-        // For example, changing direction at the end of the board
+        super.setPosition(x, y);
+        // Check if it has reached the end and flip
+        if (y == 0 || y == board.getHeight() - 1) {
+            setFlipped(!isFlipped());
+        }
     }
 }
