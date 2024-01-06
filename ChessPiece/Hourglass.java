@@ -1,23 +1,22 @@
 // Coding Member: 
 
-package ChessPiece;
+package Chess; // Assuming the 'Chess' package
 
-import java.awt.*;
+import java.awt.Image;
 
-import Board.Board;
+public class Hourglass extends Piece {
 
-public class Hourglass extends Piece{
-    
-    public Hourglass(int x, int y, Color color, Boolean flipped) {
-        super(x, y, color, flipped);
+    public Hourglass(int x, int y, boolean isWhite, Image image) {
+        super(x, y, isWhite, image);
     }
 
     @Override
-    public boolean isMovableTo(Board board, Piece p, int x, int y) {
-        // testing purpose
-        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
-            return false;
-        }
-        return true;
+    public boolean canMove(Board board, int targetX, int targetY) {
+        int xDistance = Math.abs(targetX - this.getX());
+        int yDistance = Math.abs(targetY - this.getY());
+
+        // Check for 3x2 L-shape move
+        return (xDistance == 2 && yDistance == 3) || (xDistance == 3 && yDistance == 2);
     }
-}
+
+
