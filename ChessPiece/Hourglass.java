@@ -1,10 +1,6 @@
 // Coding Member: 
 
-<<<<<<< HEAD
 package ChessPiece; // Assuming the 'Chess' package
-=======
-package ChessPiece;
->>>>>>> parent of d40ab93 (Update Hourglass.java)
 
 import java.awt.*;
 
