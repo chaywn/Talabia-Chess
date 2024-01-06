@@ -1,6 +1,6 @@
 // Coding Member: 
 
-package Chess; // Assuming the 'Chess' package
+package ChessPiece; // Assuming the 'Chess' package
 
 import java.awt.Image;
 
