@@ -213,14 +213,7 @@ public class Main extends JFrame {
         saveBtn.setFocusable(false);
         saveBtn.setEnabled(false);
         saveBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        saveBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!gameStarted) 
-                    return;
-                //to be added
-            }
-        });
+        saveBtn.addActionListener(new saveload.FileActionListener());
         JButton loadBtn = new JButton("Load Game");
         loadBtn.setFocusable(false);
         loadBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
