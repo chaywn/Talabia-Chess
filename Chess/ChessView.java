@@ -1,11 +1,12 @@
 // Coding Member: Chay Wen Ning, Melody Koh
 
-package Chess;
+package chess;
 
-import Base.Main;
-import Board.Board;
-import ChessPiece.Piece;
-import ChessPiece.Piece.PieceType;
+import base.Main;
+import board.Board;
+import chesspiece.Piece;
+import chesspiece.Piece.PieceType;
+
 import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;

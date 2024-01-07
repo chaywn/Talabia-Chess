@@ -1,12 +1,12 @@
 // Coding Member: Chay Wen Ning
 
-package Chess;
+package chess;
 import java.util.HashSet;
 
-import Board.Board;
-import ChessPiece.Piece;
-import ChessPiece.Piece.PieceType;
-import Player.Player;
+import board.Board;
+import chesspiece.Piece;
+import chesspiece.Piece.PieceType;
+import player.Player;
 
 public class Chess {
     private final int switchCounter = 4;

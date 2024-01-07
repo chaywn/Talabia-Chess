@@ -1,8 +1,8 @@
 // Coding Member: Chay Wen Ning
 
-package Player;
-import ChessPiece.*;
-import Board.Board;
+package player;
+import board.Board;
+import chesspiece.*;
 
 import java.awt.Color;
 import java.util.HashSet;

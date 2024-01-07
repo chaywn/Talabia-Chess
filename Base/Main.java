@@ -1,13 +1,14 @@
 // Coding Member: Chay Wen Ning, Melody Koh, Goh Shi Yi
 
-package Base;
-
-import Chess.Chess;
-import Chess.ChessController;
-import Chess.ChessView;
+package base;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import chess.Chess;
+import chess.ChessController;
+import chess.ChessView;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

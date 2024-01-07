@@ -1,10 +1,10 @@
 // Coding Member: Goh Shi Yi, Choo Yun Yi
 
-package ChessPiece;
+package chesspiece;
 
 import java.awt.*;
 
-import Board.Board;
+import board.Board;
 
 public class Sun extends Piece {
 

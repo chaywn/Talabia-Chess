@@ -1,11 +1,12 @@
 // Coding Member: Chay Wen Ning, Melody Koh
 
 
-package Board;
-import ChessPiece.Piece;
-import Player.Player;
+package board;
+import player.Player;
 
 import java.util.HashSet;
+
+import chesspiece.Piece;
 
 public class Board {
     private final int noOfRow = 6;

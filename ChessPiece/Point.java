@@ -1,10 +1,11 @@
 // Coding Member: Goh Shi Yi, Choo Yun Yi
 
 
-package ChessPiece;
+package chesspiece;
 
-import Board.Board;
 import java.awt.*;
+
+import board.Board;
 
 public class Point extends Piece {
 

@@ -1,12 +1,13 @@
 // Coding Member: Chay Wen Ning
 
-package Chess;
+package chess;
 
-import ChessPiece.Piece;
-import Player.Player;
+import player.Player;
 
 import java.awt.Image;
 import java.awt.Point;
+
+import chesspiece.Piece;
 
 public class ChessController {
     Chess chessModel;

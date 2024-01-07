@@ -1,9 +1,10 @@
 // Coding Member: Chay Wen Ning, Melody Koh
 
-package ChessPiece;
+package chesspiece;
 
-import Board.Board;
 import java.awt.*;
+
+import board.Board;
 
 public abstract class Piece {
     private PieceType type;

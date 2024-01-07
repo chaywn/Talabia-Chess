@@ -1,10 +1,10 @@
 // Coding Member: Melody Koh
 
-package ChessPiece;
+package chesspiece;
 
 import java.awt.*;
 
-import Board.Board;
+import board.Board;
 
 public class Time extends Piece{
 
