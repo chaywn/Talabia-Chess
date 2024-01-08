@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Goh Shi Yi
 
 package chess;
 
@@ -7,7 +7,11 @@ import observer.Observer;
 
 import java.awt.Image;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
+import javax.swing.JOptionPane;
 
 import chesspiece.Piece;
 
@@ -110,6 +114,25 @@ public class ChessController implements Observer{
         chessView.highlightLastMovedPiece(chessModel.getBoard(), null);
     }
 
+    public void saveGame(File file) {
+        try (FileWriter writer = new FileWriter(file + ".txt")) {
+            writer.write("Player Turn: " + chessModel.getPlayerTurn() + "\n");
+            writer.write("Total Play Count: "+chessModel.totalPlayCount() + "\n");
+            for (int x = 0; x < chessModel.getBoard().getNoOfColumn(); x++) {
+                for (int y = 0; y < chessModel.getBoard().getNoOfRow(); y++) {
+                    Piece piece = chessModel.getBoard().getPieceAt(x, y);
+                    if (piece != null) {
+                        writer.write("Piece at (" + x + ", " + y+ ")" + ", Piece Type: " + piece.getPieceType()
+                                + ", Piece Color: " + piece.getColor() + "\n");
+                    }
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Game saved successfully!");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: Game saved unsuccessfully.");
+        }
+    }
 
     @Override
     public void handleEvent(Event event) {
@@ -137,5 +160,9 @@ public class ChessController implements Observer{
             default:
                 break;
         }
+
+        
     }
+
+    
 }
