@@ -19,7 +19,11 @@ public class Point extends Piece {
         int yDistance = Math.abs(y - this.getY());
         if (x == this.getX() && yDistance > 0 && yDistance <= 2) {
           
-            int direction = isFlipped() ? 1 : -1;            
+            int direction = isFlipped() ? 1 : -1;
+            
+            if ((y - this.getY()) / yDistance != direction) {
+                return false;
+            }
         
             for (int i = 1; i < yDistance; i++) {
                 if ((board.getPieceAt(x, p.getY() + i * direction) != null)) {

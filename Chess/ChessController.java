@@ -2,20 +2,25 @@
 
 package chess;
 
-import player.Player;
+import observer.Event;
+import observer.Observer;
 
 import java.awt.Image;
 import java.awt.Point;
 
+
 import chesspiece.Piece;
 
-public class ChessController {
+public class ChessController implements Observer{
     Chess chessModel;
     ChessView chessView;
 
     public ChessController(Chess chessModel, ChessView chessView) {
         this.chessModel = chessModel;
         this.chessView = chessView;
+
+        chessModel.addObserver(this);
+        chessView.addObserver(this);
     }
 
     public void setModel(Chess chessModel) {
@@ -38,6 +43,7 @@ public class ChessController {
         chessView.updatePlayerStatusLabel(chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed());
     }
 
+
     public boolean currentPlayerHasPlayed() {
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
@@ -59,69 +65,77 @@ public class ChessController {
 
     public void switchPlayerTurn() {
         chessModel.switchTurn();
-        chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
-        chessView.updatePlayerStatusLabel(chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed());
+
+        viewUpdatePlayerTurn();
+        viewUpdatePlayerStatus();
         chessView.updatePieceIcons(chessModel.getBoard());
         chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
         chessView.setSwitchButtonEnabled(false);
 
-        if (chessModel.checkPlayCountAndSwitch()) {       
-            chessView.notifyPieceSwitch();
-            chessView.updatePieceIcons(chessModel.getBoard());
-        }
+        chessModel.checkPlayCountToSwitch();
     }
 
-    public boolean checkPiecePlayability(Point sourcePoint, Point destinationPoint) {
-        int[] source = new int[2];
-        int[] destination = new int[2];
+    public boolean checkPieceMove(Point source, Point destination) {
+        // Convert coordinate to board coordinate
+        Point boardSource = new Point(source.x / chessView.getGridSize(), source.y / chessView.getGridSize());
+        Point boardDestination = new Point(destination.x / chessView.getGridSize(), destination.y / chessView.getGridSize());
 
-        // Convert relative coordinate to board coordinate
-        source[0] = sourcePoint.x / chessView.getGridSize();
-        source[1] = sourcePoint.y / chessView.getGridSize();
-        destination[0] = destinationPoint.x / chessView.getGridSize();
-        destination[1] = destinationPoint.y / chessView.getGridSize();
-
-        return chessModel.checkPieceMove(source, destination);
+        return chessModel.checkPieceMove(boardSource, boardDestination);
     }
 
     public boolean checkPiecePlayability(Point piecePoint) {
-        int[] pos = new int[2];
+        // Convert coordinate to board coordinate
+        int boardX = piecePoint.x / chessView.getGridSize();
+        int boardY = piecePoint.y / chessView.getGridSize();
 
-        // Convert relative coordinate to board coordinate
-        pos[0] = piecePoint.x / chessView.getGridSize();
-        pos[1] = piecePoint.y / chessView.getGridSize();
-
-        Piece p = chessModel.getBoard().getPieceAt(pos[0], pos[1]);
-
-        return p != null && p.getColor() == chessModel.getPlayer(chessModel.getPlayerTurn()).getColor();
+        return chessModel.checkPiecePlayability(boardX, boardY);
     }
 
-    // Get the piece's coordinate and send it to the chess model to check/play
-    public void relayPiecePositionToPlay(Point[] sourceDestination) {
-        Point sourcePoint = sourceDestination[0];
-        Point destinationPoint = sourceDestination[1];
-    
-        if (checkPiecePlayability(sourcePoint, destinationPoint)) {
-            chessModel.playPieceMove( (destinationPoint.x / chessView.getGridSize()),  (destinationPoint.y / chessView.getGridSize()));
+    // Get the piece's coordinate and send it to the chess model to check and play
+    public void relayPiecePointToPlay(Point source, Point destination) {
+        Point boardSource = new Point(source.x / chessView.getGridSize(), source.y / chessView.getGridSize());
+        Point boardDestination = new Point(destination.x / chessView.getGridSize(), destination.y / chessView.getGridSize());
 
-            chessView.updatePieceIcons(chessModel.getBoard());
-            chessView.updatePlayerStatusLabel(true);
-            chessView.setSwitchButtonEnabled(true);
-
-            Player winner = chessModel.checkWinner();
-
-            if (winner != null && chessView.promptNewGame(winner.getIndex())) {
-                newGame();
-            }
-        }
+        chessModel.playPieceMove(boardSource, boardDestination);
     }
 
     public void newGame() {
         setModel(new Chess());
+        chessModel.addObserver(this);
+
         chessView.updatePieceIcons(chessModel.getBoard());
         chessView.addPieceIconResizer(chessModel.getBoard());
         chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
         chessView.updatePlayerStatusLabel(false);
         chessView.highlightLastMovedPiece(chessModel.getBoard(), null);
+    }
+
+
+    @Override
+    public void handleEvent(Event event) {
+        switch(event) {
+            case PieceMove: {
+                chessView.updatePieceIcons(chessModel.getBoard());
+                chessView.updatePlayerStatusLabel(true);
+                chessView.setSwitchButtonEnabled(true);
+                break;
+            }
+            case PieceSwitch: {
+                chessView.notifyPieceSwitch();
+                chessView.updatePieceIcons(chessModel.getBoard());
+                break;
+            }
+            case PlayerWin: {
+                int winnerIndex = (int) Event.PlayerWin.getArgument();
+                chessView.promptNewGame(winnerIndex);
+                break;
+            }
+            case NewGame: {
+                newGame();
+                break;
+            }
+            default:
+                break;
+        }
     }
 }

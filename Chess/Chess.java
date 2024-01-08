@@ -1,14 +1,20 @@
 // Coding Member: Chay Wen Ning
 
 package chess;
-import java.util.HashSet;
 
 import board.Board;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
+import observer.Event;
+import observer.Observer;
+import observer.Subject;
 import player.Player;
 
-public class Chess {
+import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Chess implements Subject {
     private final int switchCounter = 4;
     private Player[] players = new Player[2];
     private Board board;
@@ -16,6 +22,8 @@ public class Chess {
 
     private Piece selectedPiece;
     private Piece lastMovedPiece;
+
+    private Set<Observer> observerList = new HashSet<>();
 
     public Chess() {
         Player.resetPlayerCount();
@@ -38,7 +46,20 @@ public class Chess {
     public Player getPlayer(int index) { return players[index]; }
     public Board getBoard() { return board; }
     public int getPlayerTurn() { return playerTurn; }
+    public Piece getSelectedPiece() { return selectedPiece; }
     public Piece getLastMovedPiece() { return lastMovedPiece; }
+
+    @Override
+    public void addObserver(Observer o) {
+        observerList.add(o);
+    }
+
+    @Override
+    public void notifyObservers(Event event) {
+        for (Observer o: observerList) {
+            o.handleEvent(event);
+        }
+    }
 
     public int totalPlayCount() {
         int totalPlayCount = 0;
@@ -49,61 +70,77 @@ public class Chess {
     }
     
     public void switchTurn() {
-        players[playerTurn].incrementPlayCount();
-        players[playerTurn].resetHasPlayed();
         playerTurn = playerTurn == 1 ? 0 : 1;
-        
+        players[playerTurn].resetHasPlayed();
         board.flip();
     }
 
-    public void flipBoard() {
-        board.flip();
-    }
-
-    public boolean checkPlayCountAndSwitch() {
+    public void checkPlayCountToSwitch() {
         if (totalPlayCount() == switchCounter) {
             switchTimePlusPiece();
             for (Player p: players) {
                 p.resetPlayCount();
             }
-            return true;
+            notifyObservers(Event.PieceSwitch);
         }
+    }
+
+    public boolean checkPiecePlayability(int x, int y) {
+        selectedPiece = board.getPieceAt(x, y);
+
+        return selectedPiece != null && !players[playerTurn].hasPlayed() && selectedPiece.getColor() == players[playerTurn].getColor();
+    }
+
+    public boolean checkPieceMove(Point source, Point destination) {
+        if (checkPiecePlayability(source.x, source.y) && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
+            return selectedPiece.isMovableTo(board, selectedPiece, destination.x, destination.y);
+        }
+
         return false;
     }
 
-    public boolean checkPieceMove(int[] source, int[] destination) {
-        selectedPiece = board.getPieceAt(source[0], source[1]);
+    public void playPieceMove(Point source, Point destination) {
+        if (!checkPieceMove(source, destination)) 
+            return;
 
-        if (selectedPiece != null && !players[playerTurn].hasPlayed() && selectedPiece.getColor() == players[playerTurn].getColor() && (selectedPiece.getX() != destination[0] || selectedPiece.getY() != destination[1])) {
-            return selectedPiece.isMovableTo(board, selectedPiece, destination[0], destination[1]);
-        }
-
-        return false;
-    }
-
-    public void playPieceMove(int x, int y) {
-        Piece killedPiece = board.getPieceAt(x, y);
+        Piece killedPiece = board.getPieceAt(destination.x, destination.y);
 
         if (killedPiece != null) {         
             int opponentIndex = playerTurn == 1 ? 0 : 1;
             board.removePiece(killedPiece, players[opponentIndex]);
         }
         
-        board.setPieceAt(selectedPiece, x, y);
+        board.setPieceAt(selectedPiece, destination.x, destination.y);
+
         // if the piece is a Point piece and it reached the end, flip it
-        if (selectedPiece.getPieceType() == PieceType.Point && (y == 0 || y == board.getNoOfRow() - 1)) {
+        if (selectedPiece.getPieceType() == PieceType.Point && (selectedPiece.getY() == 0 || selectedPiece.getY() == board.getNoOfRow() - 1)) {
             selectedPiece.setFlipped(!selectedPiece.isFlipped());            
         }
 
-        players[playerTurn].setHasPlayed(true);
-        lastMovedPiece = selectedPiece;
-        selectedPiece = null;
+        notifyObservers(Event.PieceMove);
+        endTurn();
+    }
+
+    public void endTurn() {
+        Player winner = checkWinner();
+        if (winner != null) {
+            notifyObservers(Event.PlayerWin.returnArgument(winner.getIndex()));
+        }
+        else {
+            players[playerTurn].incrementPlayCount();
+            players[playerTurn].setHasPlayed(true);
+
+            lastMovedPiece = selectedPiece;
+            selectedPiece = null;
+        }
     }
 
     public Player checkWinner() {
+        // check if each player still have the Sun piece
         for (Player p: players) {
-            HashSet<Piece> pieces = p.getPieces();
+            Set<Piece> pieces = p.getPieces();
             boolean hasSun = false;
+            
             for (Piece pc: pieces) {
                 if (pc.getPieceType() == PieceType.Sun) {
                     hasSun = true;
@@ -120,9 +157,9 @@ public class Chess {
     // switch Time piece and Plus piece, and vice versa
     public void switchTimePlusPiece() {
         for (Player pl: players) {
-            HashSet<Piece> piecesToAdd = new HashSet<>();
-            HashSet<Piece> piecesToRemove = new HashSet<>();
-            HashSet<Piece> playerPieces = pl.getPieces();
+            Set<Piece> piecesToAdd = new HashSet<>();
+            Set<Piece> piecesToRemove = new HashSet<>();
+            Set<Piece> playerPieces = pl.getPieces();
             for (Piece pc: playerPieces) {
                 if (pc.getPieceType() == Piece.PieceType.Time) {
                     piecesToAdd.add(pc.toPlus());

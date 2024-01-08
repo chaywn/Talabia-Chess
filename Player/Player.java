@@ -6,6 +6,7 @@ import chesspiece.*;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Player {
     private static Color[] colors= {Color.YELLOW, Color.BLUE};
@@ -13,7 +14,7 @@ public class Player {
 
     private int index;
     private Color color;
-    private HashSet<Piece> pieces = new HashSet<>();
+    private Set<Piece> pieces = new HashSet<>();
 
     private int playCount;
     private boolean hasPlayed;
@@ -28,7 +29,7 @@ public class Player {
     // Getters and Setters
     public Color getColor() { return color; }
     public int getIndex() { return index; }
-    public HashSet<Piece> getPieces() { return pieces; }
+    public Set<Piece> getPieces() { return pieces; }
     public void setColor(Color color) { this.color = color; }
     public int getPlayCount() { return playCount; }
     public void setIndex(int index) { this.index = index; }

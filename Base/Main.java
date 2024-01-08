@@ -46,8 +46,12 @@ public class Main extends JFrame {
     private JLabel gridToPlay;
     private Color gridToPlayColor;
     private Icon gridToPlayIcon;
+
     private JLabel selectedGrid;
     private Color selectedGridColor;
+
+    // Set by view
+    private Color playabilityColor;
     private Image selectedPieceImage;
 
     private Point[] gridPanelMousePoints = new Point[2];  // record source and destination mouse points relative to grid panel
@@ -98,6 +102,7 @@ public class Main extends JFrame {
     public JLabel getPlayerTurnLabel() { return playerTurnLabel; }
     public JLabel getPlayerStatusLabel() { return playerStatusLabel; }
     public JButton getSwitchBtn() { return switchBtn; }
+    public void setSelectedPieceImage(Image image) { selectedPieceImage = image; }
 
 
     public void reset() {    
@@ -324,7 +329,7 @@ public class Main extends JFrame {
             }
             
             glassPane.repaint();
-            chessController.relayPiecePositionToPlay(gridPanelMousePoints);
+            chessController.relayPiecePointToPlay(gridPanelMousePoints[0], gridPanelMousePoints[1]);
         }
 
         // Mouse motion listener methods:
@@ -342,18 +347,19 @@ public class Main extends JFrame {
 
             // set global mouse point
             mainPanelMousePoint = e.getPoint();
-
             // determine the relative point at grid panel
             Point relPoint = new Point((int) (e.getPoint().x - gridPanel.getLocation().getX()), (int) (e.getPoint().y - gridPanel.getLocation().getY()));
             // set grid panel mouse points for source and destination
             gridPanelMousePoints[1] = relPoint;
+
+            chessController.checkPieceMove(gridPanelMousePoints[0], gridPanelMousePoints[1]);
 
             Component selectedComp = gridPanel.getComponentAt(gridPanelMousePoints[1]);
             if (selectedComp != null) {
                 try {
                     selectedGrid = (JLabel) selectedComp;
                     selectedGridColor = selectedGrid.getBackground();
-                    Color playabilityColor = chessController.checkPiecePlayability(gridPanelMousePoints[0], gridPanelMousePoints[1]) ? canPlayColor : cannotPlayColor;
+                    Color playabilityColor = chessController.checkPieceMove(gridPanelMousePoints[0], gridPanelMousePoints[1]) ? canPlayColor : cannotPlayColor;
                     selectedGrid.setBackground(playabilityColor);
                 }
                 catch (ClassCastException ev) {}

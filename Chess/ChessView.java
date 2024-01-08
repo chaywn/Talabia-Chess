@@ -6,17 +6,24 @@ import base.Main;
 import board.Board;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
+import observer.Event;
+import observer.Observer;
+import observer.Subject;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class ChessView {
+public class ChessView implements Subject{
     private Main frame;
     private int gridSize;
     private JLabel lastHighlightedGrid;
     private Color lastHighlightedGridColor;
+
+    Set<Observer> observerList = new HashSet<>();
 
     private enum PieceImageType {
         Hourglass("Hourglass.png"),
@@ -48,6 +55,18 @@ public class ChessView {
 
     // Getter
     public int getGridSize() { return gridSize; }
+
+    @Override
+    public void addObserver(Observer o) {
+        observerList.add(o);
+    }
+
+    @Override
+    public void notifyObservers(Event event) {
+        for (Observer o: observerList) {
+            o.handleEvent(event);
+        }
+    }
 
     public void updatePlayerTurnLabel(int playerTurn) {
         frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));
@@ -89,6 +108,7 @@ public class ChessView {
         int opt = JOptionPane.showConfirmDialog(frame, "Player " + (winnerIndex + 1) + " has won. Choose \"Yes\" to start a new game, \"No\" to quit game", "Game Over", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
             frame.reset();
+            notifyObservers(Event.NewGame);
             return true;
         }
         else {  

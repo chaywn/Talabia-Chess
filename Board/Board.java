@@ -2,11 +2,11 @@
 
 
 package board;
+
 import player.Player;
-
-import java.util.HashSet;
-
 import chesspiece.Piece;
+
+import java.util.Set;
 
 public class Board {
     private final int noOfRow = 6;
@@ -46,7 +46,7 @@ public class Board {
 
     // Set the specified player's piece set on the board according to the pieces' x, y coordinate
     public void setPlayerPiece(Player player) {
-        HashSet<Piece> playerPieces = player.getPieces();
+        Set<Piece> playerPieces = player.getPieces();
         for (Piece p: playerPieces) {
             setPieceAt(p, p.getX(), p.getY());
         }
