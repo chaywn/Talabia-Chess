@@ -205,14 +205,14 @@ public class Chess implements Subject {
             writer.write("Player 1 Play Count: " + getPlayer(0).getPlayCount() + "\n");
             writer.write("Player 2 Play Count: " + getPlayer(1).getPlayCount() + "\n");
             writer.write("Last Moved Piece At(" + getLastMovedPiece().getX() + ", " + getLastMovedPiece().getY() + ")"
-                    + ", Piece Type:" + getLastMovedPiece().getPieceType() + ", Piece Color: "
+                    + ", Piece Type:" + getLastMovedPiece().getPieceType() + ", Piece Flipped: " + getLastMovedPiece().isFlipped() + ", Piece Color: "
                     + getLastMovedPiece().getColor() + "\n");
             for (int x = 0; x < getBoard().getNoOfColumn(); x++) {
                 for (int y = 0; y < getBoard().getNoOfRow(); y++) {
                     Piece piece = getBoard().getPieceAt(x, y);
                     if (piece != null) {
                         writer.write("Piece at (" + x + ", " + y + ")" + ", Piece Type: " + piece.getPieceType()
-                                + ", Piece Color: " + piece.getColor() + "\n");
+                                + ", Piece Flipped: " + piece.isFlipped() + ", Piece Color: " + piece.getColor()  + "\n");
                     }
                 }
             }
