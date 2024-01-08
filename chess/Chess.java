@@ -42,15 +42,29 @@ public class Chess implements Subject {
             opposite = true;
         }
 
-        playerTurn = 0; 
+        playerTurn = 0;
     }
 
     // Getters
-    public Player getPlayer(int index) { return players[index]; }
-    public Board getBoard() { return board; }
-    public int getPlayerTurn() { return playerTurn; }
-    public Piece getSelectedPiece() { return selectedPiece; }
-    public Piece getLastMovedPiece() { return lastMovedPiece; }
+    public Player getPlayer(int index) {
+        return players[index];
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
+
+    public Piece getSelectedPiece() {
+        return selectedPiece;
+    }
+
+    public Piece getLastMovedPiece() {
+        return lastMovedPiece;
+    }
 
     @Override
     public void addObserver(Observer o) {
@@ -59,19 +73,19 @@ public class Chess implements Subject {
 
     @Override
     public void notifyObservers(Event event) {
-        for (Observer o: observerList) {
+        for (Observer o : observerList) {
             o.handleEvent(event);
         }
     }
 
     public int totalPlayCount() {
         int totalPlayCount = 0;
-        for (Player p: players) {
+        for (Player p : players) {
             totalPlayCount += p.getPlayCount();
         }
         return totalPlayCount;
     }
-    
+
     public void switchTurn() {
         playerTurn = playerTurn == 1 ? 0 : 1;
         players[playerTurn].resetHasPlayed();
@@ -81,7 +95,7 @@ public class Chess implements Subject {
     public void checkPlayCountToSwitch() {
         if (totalPlayCount() == switchCounter) {
             switchTimePlusPiece();
-            for (Player p: players) {
+            for (Player p : players) {
                 p.resetPlayCount();
             }
             notifyObservers(Event.PieceSwitch);
@@ -91,11 +105,13 @@ public class Chess implements Subject {
     public boolean checkPiecePlayability(int x, int y) {
         selectedPiece = board.getPieceAt(x, y);
 
-        return selectedPiece != null && !players[playerTurn].hasPlayed() && selectedPiece.getColor() == players[playerTurn].getColor();
+        return selectedPiece != null && !players[playerTurn].hasPlayed()
+                && selectedPiece.getColor() == players[playerTurn].getColor();
     }
 
     public boolean checkPieceMove(Point source, Point destination) {
-        if (checkPiecePlayability(source.x, source.y) && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
+        if (checkPiecePlayability(source.x, source.y)
+                && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
             return selectedPiece.isMovableTo(board, selectedPiece, destination.x, destination.y);
         }
 
@@ -103,21 +119,22 @@ public class Chess implements Subject {
     }
 
     public void playPieceMove(Point source, Point destination) {
-        if (!checkPieceMove(source, destination)) 
+        if (!checkPieceMove(source, destination))
             return;
 
         Piece killedPiece = board.getPieceAt(destination.x, destination.y);
 
-        if (killedPiece != null) {         
+        if (killedPiece != null) {
             int opponentIndex = playerTurn == 1 ? 0 : 1;
             board.removePiece(killedPiece, players[opponentIndex]);
         }
-        
+
         board.setPieceAt(selectedPiece, destination.x, destination.y);
 
         // if the piece is a Point piece and it reached the end, flip it
-        if (selectedPiece.getPieceType() == PieceType.Point && (selectedPiece.getY() == 0 || selectedPiece.getY() == board.getNoOfRow() - 1)) {
-            selectedPiece.setFlipped(!selectedPiece.isFlipped());            
+        if (selectedPiece.getPieceType() == PieceType.Point
+                && (selectedPiece.getY() == 0 || selectedPiece.getY() == board.getNoOfRow() - 1)) {
+            selectedPiece.setFlipped(!selectedPiece.isFlipped());
         }
 
         notifyObservers(Event.PieceMove);
@@ -128,8 +145,7 @@ public class Chess implements Subject {
         Player winner = checkWinner();
         if (winner != null) {
             notifyObservers(Event.PlayerWin.returnArgument(winner.getIndex()));
-        }
-        else {
+        } else {
             players[playerTurn].incrementPlayCount();
             players[playerTurn].setHasPlayed(true);
 
@@ -140,17 +156,17 @@ public class Chess implements Subject {
 
     public Player checkWinner() {
         // check if each player still have the Sun piece
-        for (Player p: players) {
+        for (Player p : players) {
             Set<Piece> pieces = p.getPieces();
             boolean hasSun = false;
-            
-            for (Piece pc: pieces) {
+
+            for (Piece pc : pieces) {
                 if (pc.getPieceType() == PieceType.Sun) {
                     hasSun = true;
                     break;
                 }
             }
-            if (!hasSun) 
+            if (!hasSun)
                 return players[p.getIndex() == 1 ? 0 : 1];
         }
 
@@ -159,11 +175,11 @@ public class Chess implements Subject {
 
     // switch Time piece and Plus piece, and vice versa
     public void switchTimePlusPiece() {
-        for (Player pl: players) {
+        for (Player pl : players) {
             Set<Piece> piecesToAdd = new HashSet<>();
             Set<Piece> piecesToRemove = new HashSet<>();
             Set<Piece> playerPieces = pl.getPieces();
-            for (Piece pc: playerPieces) {
+            for (Piece pc : playerPieces) {
                 if (pc.getPieceType() == Piece.PieceType.Time) {
                     piecesToAdd.add(pc.toPlus());
                     piecesToRemove.add(pc);
@@ -173,10 +189,10 @@ public class Chess implements Subject {
                     piecesToRemove.add(pc);
                 }
             }
-            for (Piece pc: piecesToRemove) {
+            for (Piece pc : piecesToRemove) {
                 pl.removePiece(pc);
             }
-            for (Piece pc: piecesToAdd) {
+            for (Piece pc : piecesToAdd) {
                 pl.addPiece(pc);
                 board.setPieceAt(pc, pc.getX(), pc.getY());
             }
@@ -186,12 +202,16 @@ public class Chess implements Subject {
     public boolean saveGame(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
             writer.write("Player Turn: " + getPlayerTurn() + "\n");
-            writer.write("Total Play Count: "+totalPlayCount() + "\n");
+            writer.write("Player 1 Play Count: " + getPlayer(0).getPlayCount() + "\n");
+            writer.write("Player 2 Play Count: " + getPlayer(1).getPlayCount() + "\n");
+            writer.write("Last Moved Piece At(" + getLastMovedPiece().getX() + ", " + getLastMovedPiece().getY() + ")"
+                    + ", Piece Type:" + getLastMovedPiece().getPieceType() + ", Piece Color: "
+                    + getLastMovedPiece().getColor() + "\n");
             for (int x = 0; x < getBoard().getNoOfColumn(); x++) {
                 for (int y = 0; y < getBoard().getNoOfRow(); y++) {
                     Piece piece = getBoard().getPieceAt(x, y);
                     if (piece != null) {
-                        writer.write("Piece at (" + x + ", " + y+ ")" + ", Piece Type: " + piece.getPieceType()
+                        writer.write("Piece at (" + x + ", " + y + ")" + ", Piece Type: " + piece.getPieceType()
                                 + ", Piece Color: " + piece.getColor() + "\n");
                     }
                 }
