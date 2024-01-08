@@ -52,15 +52,9 @@ public class ChessController implements Observer{
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
 
-    public Image getSelectedPieceImage(Point point) {
-        // Convert relative coordinate to board coordinate
-        int x =  point.x / chessView.getGridSize();
-        int y =  point.y / chessView.getGridSize();
-
-        Piece selectedPiece = chessModel.getBoard().getPieceAt(x, y);
-
-        if (selectedPiece != null && selectedPiece.getColor() == chessModel.getPlayer(chessModel.getPlayerTurn()).getColor()) {
-            return chessView.getPieceImage(selectedPiece);
+    public Image getSelectedPieceImage(Point source) {
+        if (checkPiecePlayability(source)) {
+            return chessView.getPieceImage(chessModel.getSelectedPiece());
         }
         else {
             return null;
