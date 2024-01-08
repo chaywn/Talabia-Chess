@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning
+// Coding Member: Chay Wen Ning, Goh Shi Yi
 
 package chess;
 
@@ -11,6 +11,9 @@ import observer.Subject;
 import player.Player;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -179,4 +182,25 @@ public class Chess implements Subject {
             }
         }
     }
+
+    public boolean saveGame(File file) {
+        try (FileWriter writer = new FileWriter(file + ".txt")) {
+            writer.write("Player Turn: " + getPlayerTurn() + "\n");
+            writer.write("Total Play Count: "+totalPlayCount() + "\n");
+            for (int x = 0; x < getBoard().getNoOfColumn(); x++) {
+                for (int y = 0; y < getBoard().getNoOfRow(); y++) {
+                    Piece piece = getBoard().getPieceAt(x, y);
+                    if (piece != null) {
+                        writer.write("Piece at (" + x + ", " + y+ ")" + ", Piece Type: " + piece.getPieceType()
+                                + ", Piece Color: " + piece.getColor() + "\n");
+                    }
+                }
+            }
+            return true;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }

@@ -246,7 +246,7 @@ public class Main extends JFrame {
                 int result = fc.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fc.getSelectedFile();
-                    chessController.saveGame(selectedFile);
+                    chessController.saveGameData(selectedFile);
                 }
             }
         });

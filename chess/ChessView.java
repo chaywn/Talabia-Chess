@@ -1,4 +1,4 @@
-// Coding Member: Chay Wen Ning, Melody Koh
+// Coding Member: Chay Wen Ning, Melody Koh, Goh Shi Yi
 
 package chess;
 
@@ -213,6 +213,17 @@ public class ChessView implements Subject{
         lastHighlightedGrid = grid;
         lastHighlightedGridColor = grid.getBackground();
         grid.setBackground(Color.ORANGE);
+
+        
+    }
+
+    public void notifySave(boolean successful) {
+        if (successful) {
+          JOptionPane.showMessageDialog(frame.getGridPanel(),"Save Successfully");
+        }
+        else{
+            JOptionPane.showMessageDialog(frame.getGridPanel(),"Error: Save Unsuccessfully");
+        }
     }
 }
 
