@@ -396,7 +396,7 @@ public class Main extends JFrame {
                 try {
                     selectedGrid = (JLabel) selectedComp;
                     selectedGridColor = selectedGrid.getBackground();
-                    Color playabilityColor = chessController.checkPieceMove(gridPanelMousePoints[0],
+                    playabilityColor = chessController.checkPieceMove(gridPanelMousePoints[0],
                             gridPanelMousePoints[1]) ? canPlayColor : cannotPlayColor;
                     selectedGrid.setBackground(playabilityColor);
                 } catch (ClassCastException ev) {
