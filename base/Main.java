@@ -332,7 +332,7 @@ public class Main extends JFrame {
                 gridToPlay.setBackground(toPlayColor);
                 gridToPlay.setIcon(null);
 
-                selectedPieceImage = chessController.getSelectedPieceImage(gridPanelMousePoints[0]);
+                selectedPieceImage = chessController.getSelectedPieceImage();
             }
 
             glassPane.repaint();

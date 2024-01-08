@@ -52,13 +52,9 @@ public class ChessController implements Observer{
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
 
-    public Image getSelectedPieceImage(Point source) {
-        if (checkPiecePlayability(source)) {
-            return chessView.getPieceImage(chessModel.getSelectedPiece());
-        }
-        else {
-            return null;
-        }       
+    public Image getSelectedPieceImage() {
+        return chessView.getPieceImage(chessModel.getSelectedPiece());
+     
     }   
 
     public void switchPlayerTurn() {
