@@ -47,14 +47,12 @@ public class ChessController implements Observer{
         chessView.updatePlayerStatusLabel(chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed());
     }
 
-
     public boolean currentPlayerHasPlayed() {
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
 
     public Image getSelectedPieceImage() {
         return chessView.getPieceImage(chessModel.getSelectedPiece());
-     
     }   
 
     public void switchPlayerTurn() {
