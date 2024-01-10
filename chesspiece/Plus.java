@@ -1,4 +1,7 @@
-// Coding Member: Goh Shi Yi
+/**
+*
+* @author Goh Shi Yi
+*/
 
 package chesspiece;
 

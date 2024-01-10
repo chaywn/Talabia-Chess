@@ -1,4 +1,7 @@
-// Coding Member: Chay Wen Ning
+/**
+*
+* @author Chay Wen Ning
+*/
 
 package player;
 import board.Board;
@@ -16,7 +19,7 @@ public class Player {
     private Color color;
     private Set<Piece> pieces = new HashSet<>();
 
-    private int playCount;
+    public int playCount;
     private boolean hasPlayed;
 
     public Player() {

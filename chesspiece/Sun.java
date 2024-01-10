@@ -1,5 +1,8 @@
-// Coding Member: Goh Shi Yi, Choo Yun Yi
-
+/**
+*
+* @author Goh Shi Yi
+* @author Choo Yun Yi
+*/
 package chesspiece;
 
 import java.awt.*;

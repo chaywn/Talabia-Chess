@@ -1,5 +1,9 @@
-// Coding Member: Chay Wen Ning, Melody Koh
-
+/**
+*
+* @author Chay Wen Ning
+* @author Melody Koh
+* @author Goh Shi Yi
+*/
 
 package board;
 

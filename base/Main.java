@@ -1,4 +1,9 @@
-// Coding Member: Chay Wen Ning, Melody Koh, Goh Shi Yi
+/**
+*
+* @author Chay Wen Ning
+* @author Melody Koh
+* @author Goh Shi Yi
+*/
 
 package base;
 
@@ -104,6 +109,7 @@ public class Main extends JFrame {
         return gridPanel;
     }
 
+    //getter methods
     public JPanel getGlassPane() {
         return glassPane;
     }
@@ -256,7 +262,13 @@ public class Main extends JFrame {
         loadBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // to be added
+                JFileChooser fc = new JFileChooser();
+                int result = fc.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fc.getSelectedFile();
+                    chessController.loadGameData(selectedFile);
+                    
+                }
             }
         });
 

@@ -1,4 +1,8 @@
-// Coding Member: Chay Wen Ning, Melody Koh
+/**
+*
+* @author Chay Wen Ning
+* @author Melody Koh
+*/
 
 package chesspiece;
 
@@ -38,6 +42,8 @@ public abstract class Piece {
     public boolean isFlipped() { return flipped; }
     public int getX() { return x; }
     public int getY() { return y; }
+    public void setPieaceType(PieceType type) { this.type = type;}
+    public void setColor(Color color) { this.color = color; }
     public void setFlipped(boolean flipped) { this.flipped = flipped; }
     public void setX(int x) { this.x = x; }
     public void setY(int y) { this.y = y; }

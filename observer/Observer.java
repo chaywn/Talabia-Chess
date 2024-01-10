@@ -1,3 +1,7 @@
+/**
+*
+* @author Chay Wen Ning
+*/
 package observer;
 
 public interface Observer {

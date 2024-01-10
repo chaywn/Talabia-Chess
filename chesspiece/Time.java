@@ -1,4 +1,7 @@
-// Coding Member: Melody Koh
+/**
+*
+* @author Melody Koh
+*/
 
 package chesspiece;
 

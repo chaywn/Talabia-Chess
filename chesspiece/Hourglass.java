@@ -1,4 +1,7 @@
-// Coding Member: 
+/**
+*
+* @author 
+*/
 
 package chesspiece;
 
@@ -6,8 +9,18 @@ import java.awt.*;
 
 import board.Board;
 
-public class Hourglass extends Piece{
-    
+public class Hourglass extends Piece {
+
+    /**
+     *
+     * Hourglass
+     *
+     * @param x 
+     * @param y  
+     * @param color  
+     * @param flipped  
+     * @return public
+     */
     public Hourglass(int x, int y, Color color, Boolean flipped) {
         super(x, y, color, flipped);
     }
