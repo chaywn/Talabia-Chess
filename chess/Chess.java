@@ -6,6 +6,9 @@ import java.awt.*;
 
 import board.Board;
 import chesspiece.Hourglass;
+import chesspiece.Plus;
+import chesspiece.Sun;
+import chesspiece.Time;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
 import observer.Event;
@@ -307,15 +310,13 @@ public class Chess implements Subject {
                             Boolean.parseBoolean(loadPieceString[3]));
                     break;
                 }
-                case Point: {
-                    loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                    loadPiece.setPosition(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]));
-                    break;
-                }
+                // case Point: {
+                //     loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
+                //             Integer.parseInt(loadPieceString[1]),
+                //             colour,
+                //             Boolean.parseBoolean(loadPieceString[3]));
+                //     break;
+                // }
                 case Sun: {
                     loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
