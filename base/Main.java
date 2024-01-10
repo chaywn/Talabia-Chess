@@ -265,8 +265,13 @@ public class Main extends JFrame {
                 JFileChooser fc = new JFileChooser();
                 int result = fc.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
+
                     File selectedFile = fc.getSelectedFile();
                     chessController.loadGameData(selectedFile);
+                    gameStarted = true;
+                    saveBtn.setEnabled(true);
+                    glassPane.repaint();
+
                     
                 }
             }

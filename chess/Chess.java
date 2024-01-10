@@ -2,7 +2,10 @@
 
 package chess;
 
+import java.awt.*;
+
 import board.Board;
+import chesspiece.Hourglass;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
 import observer.Event;
@@ -10,12 +13,16 @@ import observer.Observer;
 import observer.Subject;
 import player.Player;
 
-import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Chess implements Subject {
     private final int switchCounter = 4;
@@ -201,18 +208,23 @@ public class Chess implements Subject {
 
     public boolean saveGame(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
-            writer.write("Player Turn: " + getPlayerTurn() + "\n");
-            writer.write("Player 1 Play Count: " + getPlayer(0).getPlayCount() + "\n");
-            writer.write("Player 2 Play Count: " + getPlayer(1).getPlayCount() + "\n");
-            writer.write("Last Moved Piece At(" + getLastMovedPiece().getX() + ", " + getLastMovedPiece().getY() + ")"
-                    + ", Piece Type:" + getLastMovedPiece().getPieceType() + ", Piece Flipped: " + getLastMovedPiece().isFlipped() + ", Piece Color: "
-                    + getLastMovedPiece().getColor() + "\n");
+            writer.write(getPlayerTurn() + "\n"); // 0
+            writer.write(getPlayer(0).getPlayCount() + "\n"); // 1
+            writer.write(getPlayer(1).getPlayCount() + "\n"); // 2
+            writer.write(getLastMovedPiece().getX() + "," // 3
+                    + getLastMovedPiece().getY() + "," // 3
+                    + getLastMovedPiece().getPieceType() + "," // 3
+                    + getLastMovedPiece().isFlipped() + "\n" // 3
+                    + getLastMovedPiece().getColor() + "\n"); // 4
             for (int x = 0; x < getBoard().getNoOfColumn(); x++) {
                 for (int y = 0; y < getBoard().getNoOfRow(); y++) {
                     Piece piece = getBoard().getPieceAt(x, y);
                     if (piece != null) {
-                        writer.write("Piece at (" + x + ", " + y + ")" + ", Piece Type: " + piece.getPieceType()
-                                + ", Piece Flipped: " + piece.isFlipped() + ", Piece Color: " + piece.getColor()  + "\n");
+                        writer.write(x + ","
+                                + y + ","
+                                + piece.getPieceType() + ","
+                                + piece.isFlipped() + ","
+                                + piece.getColor() + "\n");
                     }
                 }
             }
@@ -223,4 +235,112 @@ public class Chess implements Subject {
         }
     }
 
+    public Color toColor(String string) {
+        String[] colorString = string.split(",");
+       
+        String redString, greenString, blueString;
+        int red = 0, green = 0, blue = 0; //initialize 
+        Pattern pattern = Pattern.compile("\\d+"); //a sequence of digits 0-9
+
+         // red
+        Matcher matcher = pattern.matcher(colorString[0]); //get digits from red
+        while (matcher.find()) { //finds the matching pattern, if true:
+            redString = matcher.group(); // returns the matching string
+            red = Integer.parseInt(redString);
+        }
+
+        // green
+        matcher = pattern.matcher(colorString[1]);
+        while (matcher.find()) {
+            greenString = matcher.group();
+            green = Integer.parseInt(greenString);
+        }
+        
+        // blue
+        matcher = pattern.matcher(colorString[2]);
+        while (matcher.find()) {
+            blueString = matcher.group();
+            blue = Integer.parseInt(blueString);
+        }
+
+        Color colour = new Color(red, green, blue);
+
+        return colour;
+    }
+
+    public boolean loadGame(File fileName) {
+        StringBuilder fileContent = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            int totalLine = 0;
+            while ((line = reader.readLine()) != null) {
+                fileContent.append(line).append("\n");
+                totalLine++;
+            }
+
+            String fileString = fileContent.toString();
+            String[] fileLine = fileString.split("\n");
+
+            // playerTurn
+            playerTurn = Integer.parseInt(fileLine[0]);
+            // player0 play count
+            getPlayer(0).playCount = Integer.parseInt(fileLine[1]);
+            // player1 play count
+            getPlayer(1).playCount = Integer.parseInt(fileLine[2]);
+
+            // pieces
+            String[] loadPieceString = fileLine[3].split(",");
+            Piece loadPiece;
+            for (int min = 4; min < totalLine-1; min++) {
+            Color colour = toColor(fileLine[min+1]);
+            switch (PieceType.valueOf(loadPieceString[2])) {
+                case Hourglass: {
+                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    break;
+                }
+                case Plus: {
+                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    break;
+                }
+                case Point: {
+                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    loadPiece.setPosition(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]));
+                    break;
+                }
+                case Sun: {
+                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    break;
+                }
+                case Time: {
+                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+           // if (min ==4)
+            min++; 
+        }
+        } catch (IOException e) {
+            System.out.println("File does not exist.");
+        }
+        return true;
+    }
 }

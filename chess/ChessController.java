@@ -227,8 +227,7 @@ public class ChessController implements Observer{
  * @param file  the file to load game data from
  */
     public void loadGameData(File file) { 
-
-        // chessView.notifyLoad(chessModel.loadGame(file));
+        chessView.notifyLoad(chessModel.loadGame(file));
     }
 
     @Override

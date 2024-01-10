@@ -1,4 +1,9 @@
-// Coding Member: Chay Wen Ning, Melody Koh, Goh Shi Yi
+/**
+*
+* @author Chay Wen Ning
+* @author Melody Koh
+* @author Goh Shi Yi
+*/
 
 package chess;
 
@@ -17,6 +22,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+ /**
+ * The class ChessView implements Subject
+ */ 
 public class ChessView implements Subject{
     private Main frame;
     private int gridSize;
@@ -223,6 +231,15 @@ public class ChessView implements Subject{
         }
         else{
             JOptionPane.showMessageDialog(frame.getGridPanel(),"Error: Save Unsuccessfully");
+        }
+    }
+
+    public void notifyLoad(boolean successful) {
+        if (successful) {
+          JOptionPane.showMessageDialog(frame.getGridPanel(),"Load Successfully");
+        }
+        else{
+            JOptionPane.showMessageDialog(frame.getGridPanel(),"Error: Load Unsuccessfully");
         }
     }
 }
