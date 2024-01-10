@@ -238,13 +238,13 @@ public class Chess implements Subject {
         String[] colorString = string.split(",");
        
         String redString, greenString, blueString;
-        int red = 0, green = 0, blue = 0; //initialize 
-        Pattern pattern = Pattern.compile("\\d+"); //a sequence of digits 0-9
+        int red = 0, green = 0, blue = 0;                      //initialize 
+        Pattern pattern = Pattern.compile("\\d+");      //a sequence of digits 0-9
 
          // red
-        Matcher matcher = pattern.matcher(colorString[0]); //get digits from red
-        while (matcher.find()) { //finds the matching pattern, if true:
-            redString = matcher.group(); // returns the matching string
+        Matcher matcher = pattern.matcher(colorString[0]);  //get digits from red
+        while (matcher.find()) {                            //finds the matching pattern, if true:
+            redString = matcher.group();                    // returns the matching string
             red = Integer.parseInt(redString);
         }
 
@@ -301,14 +301,14 @@ public class Chess implements Subject {
                     break;
                 }
                 case Plus: {
-                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                    loadPiece = new Plus(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
                             colour,
                             Boolean.parseBoolean(loadPieceString[3]));
                     break;
                 }
                 case Point: {
-                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                    loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
                             colour,
                             Boolean.parseBoolean(loadPieceString[3]));
@@ -317,14 +317,14 @@ public class Chess implements Subject {
                     break;
                 }
                 case Sun: {
-                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                    loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
                             colour,
                             Boolean.parseBoolean(loadPieceString[3]));
                     break;
                 }
                 case Time: {
-                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                    loadPiece = new Time(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
                             colour,
                             Boolean.parseBoolean(loadPieceString[3]));
