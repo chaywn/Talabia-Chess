@@ -9,6 +9,7 @@ import chesspiece.Hourglass;
 import chesspiece.Plus;
 import chesspiece.Sun;
 import chesspiece.Time;
+import chesspiece.Point;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
 import observer.Event;
@@ -118,7 +119,7 @@ public class Chess implements Subject {
                 && selectedPiece.getColor() == players[playerTurn].getColor();
     }
 
-    public boolean checkPieceMove(Point source, Point destination) {
+    public boolean checkPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (checkPiecePlayability(source.x, source.y)
                 && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
             return selectedPiece.isMovableTo(board, selectedPiece, destination.x, destination.y);
@@ -127,7 +128,7 @@ public class Chess implements Subject {
         return false;
     }
 
-    public void playPieceMove(Point source, Point destination) {
+    public void playPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (!checkPieceMove(source, destination))
             return;
 
@@ -310,13 +311,13 @@ public class Chess implements Subject {
                             Boolean.parseBoolean(loadPieceString[3]));
                     break;
                 }
-                // case Point: {
-                //     loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
-                //             Integer.parseInt(loadPieceString[1]),
-                //             colour,
-                //             Boolean.parseBoolean(loadPieceString[3]));
-                //     break;
-                // }
+                case Point: {
+                    loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
+                            Integer.parseInt(loadPieceString[1]),
+                            colour,
+                            Boolean.parseBoolean(loadPieceString[3]));
+                    break;
+                }
                 case Sun: {
                     loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
                             Integer.parseInt(loadPieceString[1]),
