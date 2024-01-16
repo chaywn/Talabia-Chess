@@ -103,7 +103,6 @@ public class ChessController implements Observer{
  * @return boolean
  */
     public boolean currentPlayerHasPlayed() { 
-
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
     }
 
@@ -164,7 +163,7 @@ public class ChessController implements Observer{
  * @param piecePoint  the piece point. 
  * @return boolean
  */
-    public boolean checkPiecePlayability(Point piecePoint) { 
+    public boolean checkPiecePlayability(java.awt.Point piecePoint) { 
 
         // Convert coordinate to board coordinate
         int boardX = piecePoint.x / chessView.getGridSize();
@@ -227,20 +226,15 @@ public class ChessController implements Observer{
  * @param file  the file to load game data from
  */
     public void loadGameData(File file) { 
-        chessView.notifyLoad(chessModel.loadGame(file));
-        
-        setModel(chessModel);
-        chessModel.addObserver(this);
-        chessView.updatePieceIcons(chessModel.getBoard());
-        chessView.addPieceIconResizer(chessModel.getBoard());
-        chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
-        chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
-        chessView.updatePlayerStatusLabel(chessModel.getHasPlayed());
 
+        chessView.notifyLoad(chessModel.loadGame(file));
+        chessView.updatePieceIcons(chessModel.getBoard());
+        chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
+        viewUpdatePlayerTurn();
+        viewUpdatePlayerStatus(); 
     }
 
     @Override
-
 /** 
  *
  * Handles event notified by the ChessController's subjects

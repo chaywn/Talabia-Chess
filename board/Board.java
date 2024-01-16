@@ -48,6 +48,10 @@ public class Board {
         }
     }
 
+    public void clearPieces() {
+        pieces = new Piece[noOfRow][noOfColumn];
+    }
+
     // Set the specified player's piece set on the board according to the pieces' x, y coordinate
     public void setPlayerPiece(Player player) {
         Set<Piece> playerPieces = player.getPieces();

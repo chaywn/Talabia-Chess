@@ -118,9 +118,9 @@ public class Chess implements Subject {
 
     public boolean checkPiecePlayability(int x, int y) {
         selectedPiece = board.getPieceAt(x, y);
-
+        
         return selectedPiece != null && !players[playerTurn].hasPlayed()
-                && selectedPiece.getColor() == players[playerTurn].getColor();
+                && selectedPiece.getColor().equals(players[playerTurn].getColor());
     }
 
     public boolean checkPieceMove(java.awt.Point source, java.awt.Point destination) {
@@ -295,77 +295,78 @@ public class Chess implements Subject {
 
             // playerTurn
             playerTurn = Integer.parseInt(fileLine[0]);
+
             //playerHasPlayed
             players[playerTurn].setHasPlayed(Boolean.parseBoolean(fileLine[totalLine-1]));
-            // player0 play count
-            getPlayer(0).playCount = Integer.parseInt(fileLine[1]);
-            // player1 play count
-            getPlayer(1).playCount = Integer.parseInt(fileLine[2]);
 
-            // pieces
-            
-            
-            Piece loadPiece = null;
-            Board loadBoard = new Board();
-            for (int min = 3; min < totalLine-1; min++) {
-            Color colour = toColor(fileLine[min+1]);
-            String[] loadPieceString = fileLine[min].split(",");
-            
-            switch (PieceType.valueOf(loadPieceString[2])) {
-                case Hourglass: {
-                    loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                            loadBoard.setPieceAt(loadPiece,Integer.parseInt(loadPieceString[0]),Integer.parseInt(loadPieceString[1]));
-
-                            break;
-                }
-                case Plus: {
-                    loadPiece = new Plus(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                            loadBoard.setPieceAt(loadPiece,Integer.parseInt(loadPieceString[0]),Integer.parseInt(loadPieceString[1]));
-
-                            break;
-                }
-                case Point: {
-                    loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                            loadBoard.setPieceAt(loadPiece,Integer.parseInt(loadPieceString[0]),Integer.parseInt(loadPieceString[1]));
-
-                            break;
-                }
-                case Sun: {
-                    loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                            loadBoard.setPieceAt(loadPiece,Integer.parseInt(loadPieceString[0]),Integer.parseInt(loadPieceString[1]));
-
-                            break;
-                }
-                case Time: {
-                    loadPiece = new Time(Integer.parseInt(loadPieceString[0]),
-                            Integer.parseInt(loadPieceString[1]),
-                            colour,
-                            Boolean.parseBoolean(loadPieceString[3]));
-                            loadBoard.setPieceAt(loadPiece,Integer.parseInt(loadPieceString[0]),Integer.parseInt(loadPieceString[1]));
-
-                            break;
-                }
-                
+            // player play count
+            for (int i = 0; i < 2; i++) {
+                players[i].playCount = Integer.parseInt(fileLine[i+1]);
+                players[i].clearPieces();
             }
             
-           if (min ==3) {
-            lastMovedPiece = loadPiece;
-           }
-           min++;
-        }
-        board = loadBoard;
+            // clear board
+            board.clearPieces();
+
+            // load pieces
+            for (int min = 3; min < totalLine-1; min++) {
+                Piece loadPiece = null;
+                Color colour = toColor(fileLine[min+1]);
+                int playerIndex = colour.equals(Color.YELLOW) ? 0 : 1;
+                String[] loadPieceString = fileLine[min].split(",");
+                
+                switch (PieceType.valueOf(loadPieceString[2])) {
+                    case Hourglass: {
+                        loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
+                                Integer.parseInt(loadPieceString[1]),
+                                colour,
+                                Boolean.parseBoolean(loadPieceString[3]));
+                        break;
+                    }
+                    case Plus: {
+                        loadPiece = new Plus(Integer.parseInt(loadPieceString[0]),
+                                Integer.parseInt(loadPieceString[1]),
+                                colour,
+                                Boolean.parseBoolean(loadPieceString[3]));
+                        break;
+                    }
+                    case Point: {
+                        loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
+                                Integer.parseInt(loadPieceString[1]),
+                                colour,
+                                Boolean.parseBoolean(loadPieceString[3]));
+                        break;
+                    }
+                    case Sun: {
+                        loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
+                                Integer.parseInt(loadPieceString[1]),
+                                colour,
+                                Boolean.parseBoolean(loadPieceString[3]));
+                        break;
+                    }
+                    case Time: {
+                        loadPiece = new Time(Integer.parseInt(loadPieceString[0]),
+                                Integer.parseInt(loadPieceString[1]),
+                                colour,
+                                Boolean.parseBoolean(loadPieceString[3]));
+                        break;
+                    }
+                    
+                }
+
+                getPlayer(playerIndex).addPiece(loadPiece);
+
+                
+                if (min == 3) {
+                    lastMovedPiece = loadPiece;
+                }
+                min++;
+            }
+            
+            for (int i = 0; i < 2; i++) {
+                board.setPlayerPiece(players[i]);
+            }
+
         } catch (IOException e) {
             System.out.println("File does not exist.");
         }

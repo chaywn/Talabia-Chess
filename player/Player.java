@@ -61,6 +61,10 @@ public class Player {
         }
     }
 
+    public void clearPieces() {
+        pieces.clear();
+    }
+
     public void initializePieces(Board board, int offsetX, int offsetY, boolean opposite) {
         int offsetY2 = opposite == true ? 1 : 0;
 

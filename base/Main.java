@@ -272,9 +272,6 @@ public class Main extends JFrame {
                     gameStarted = true;
                     saveBtn.setEnabled(true);
                     glassPane.repaint();
-
-                    chessController.viewUpdatePlayerTurn();
-                    chessController.viewUpdatePlayerStatus();   
                 }
             }
         });
@@ -339,8 +336,9 @@ public class Main extends JFrame {
             gridPanelMousePoints[0] = relPoint;
             gridPanelMousePoints[1] = relPoint;
 
-            if (!chessController.checkPiecePlayability(gridPanelMousePoints[0]))
+            if (!chessController.checkPiecePlayability(gridPanelMousePoints[0])) {
                 return;
+            }
 
             Component selectedComp = gridPanel.getComponentAt(relPoint);
             if (selectedComp != null) {
