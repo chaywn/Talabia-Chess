@@ -214,15 +214,14 @@ public class ChessController implements Observer {
      */
     public boolean loadGameData(File file) {
 
-            if (chessView.notifyLoad(chessModel.loadGame(file))) {
+        if (chessView.notifyLoad(chessModel.loadGame(file))) {
         
             chessView.updatePieceIcons(chessModel.getBoard());
             chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
             viewUpdatePlayerTurn();
             viewUpdatePlayerStatus();
-            if (chessModel.getHasPlayed()) {
-                chessView.setSwitchButtonEnabled(true);
-            }
+            chessView.setSwitchButtonEnabled(chessModel.getHasPlayed());
+
             return true;
         }
         else {
