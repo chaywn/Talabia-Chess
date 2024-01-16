@@ -228,6 +228,15 @@ public class ChessController implements Observer{
  */
     public void loadGameData(File file) { 
         chessView.notifyLoad(chessModel.loadGame(file));
+        
+        setModel(chessModel);
+        chessModel.addObserver(this);
+        chessView.updatePieceIcons(chessModel.getBoard());
+        chessView.addPieceIconResizer(chessModel.getBoard());
+        chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
+        chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
+        chessView.updatePlayerStatusLabel(chessModel.getHasPlayed());
+
     }
 
     @Override
