@@ -19,7 +19,7 @@ public class Player {
     private Color color;
     private Set<Piece> pieces = new HashSet<>();
 
-    public int playCount;
+    private int playCount;
     private boolean hasPlayed;
 
     public Player() {
@@ -35,6 +35,7 @@ public class Player {
     public Set<Piece> getPieces() { return pieces; }
     public void setColor(Color color) { this.color = color; }
     public int getPlayCount() { return playCount; }
+    public void setPlayCount(int playCount) { this.playCount = playCount; }
     public void setIndex(int index) { this.index = index; }
     public boolean hasPlayed() { return hasPlayed; }
     public void setHasPlayed(boolean hasPlayed) { this.hasPlayed = hasPlayed; }

@@ -234,12 +234,14 @@ public class ChessView implements Subject{
         }
     }
 
-    public void notifyLoad(boolean successful) {
+    public boolean notifyLoad(boolean successful) {
         if (successful) {
           JOptionPane.showMessageDialog(frame.getGridPanel(),"Load Successfully");
+          return true;
         }
         else{
             JOptionPane.showMessageDialog(frame.getGridPanel(),"Error: Load Unsuccessfully");
+            return false;
         }
     }
 }

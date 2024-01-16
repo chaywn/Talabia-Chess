@@ -233,10 +233,6 @@ public class Chess implements Subject {
                                 + piece.isFlipped() + "\n"
                                 + piece.getColor() + "\n");
                     }
-                    // else {
-                    //     writer.write( x + ","
-                    //                 + y + ",null,null\nnull");
-                    // }
                 }
             }
             writer.write(getPlayer(getPlayerTurn()).hasPlayed() + "\n");
@@ -301,7 +297,7 @@ public class Chess implements Subject {
 
             // player play count
             for (int i = 0; i < 2; i++) {
-                players[i].playCount = Integer.parseInt(fileLine[i+1]);
+                players[i].setPlayCount(Integer.parseInt(fileLine[i+1]));
                 players[i].clearPieces();
             }
             
@@ -369,6 +365,7 @@ public class Chess implements Subject {
 
         } catch (IOException e) {
             System.out.println("File does not exist.");
+            return false;
         }
         
         return true;
