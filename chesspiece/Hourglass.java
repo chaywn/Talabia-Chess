@@ -7,7 +7,7 @@ package chesspiece;
 
 import java.awt.*;
 
-import board.Board;
+import chessboard.ChessBoard;
 
 public class Hourglass extends Piece {
 
@@ -26,11 +26,11 @@ public class Hourglass extends Piece {
     }
 
     @Override
-    public boolean isMovableTo(Board board, Piece p, int x, int y) {
+    public boolean isMovableTo(ChessBoard board, Piece p, int x, int y) {
         int xDistance = Math.abs(x - p.getX());
         int yDistance = Math.abs(y - p.getY());
 
-        if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
+        if ((board.getPieceAt(x, y) != null) && (p.getColor().equals(board.getPieceAt(x, y).getColor()))) {
             return false;
         }
 

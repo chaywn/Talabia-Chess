@@ -4,12 +4,13 @@
 */
 
 package player;
-import board.Board;
 import chesspiece.*;
 
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
+
+import chessboard.ChessBoard;
 
 public class Player {
     private static Color[] colors= {Color.YELLOW, Color.BLUE};
@@ -66,7 +67,7 @@ public class Player {
         pieces.clear();
     }
 
-    public void initializePieces(Board board, int offsetX, int offsetY, boolean opposite) {
+    public void initializePieces(ChessBoard board, int offsetX, int offsetY, boolean opposite) {
         int offsetY2 = opposite == true ? 1 : 0;
 
         // Initialize Point pieces

@@ -3,8 +3,9 @@
 * @author Chay Wen Ning
 * @author Melody Koh
 * @author Goh Shi Yi
+* @author Choo Yun Yi
 */
-package chess;
+package chessgame;
 
 import observer.Event;
 import observer.Observer;
@@ -17,7 +18,7 @@ import java.io.File;
  * The class ChessController implements Observer
  */
 public class ChessController implements Observer {
-    Chess chessModel;
+    ChessGame chessModel;
     ChessView chessView;
 
     /**
@@ -28,7 +29,7 @@ public class ChessController implements Observer {
      * @param chessView  the chess view.
      * @return public
      */
-    public ChessController(Chess chessModel, ChessView chessView) {
+    public ChessController(ChessGame chessModel, ChessView chessView) {
 
         this.chessModel = chessModel;
         this.chessView = chessView;
@@ -43,7 +44,7 @@ public class ChessController implements Observer {
      *
      * @param chessModel the chess model.
      */
-    public void setModel(Chess chessModel) {
+    public void setModel(ChessGame chessModel) {
 
         this.chessModel = chessModel;
     }
@@ -73,9 +74,9 @@ public class ChessController implements Observer {
      * View update player turn
      *
      */
-    public void viewUpdatePlayerTurn() {
+    public void displayCurrentPlayerTurn() {
 
-        chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
+        chessView.displayPlayerTurn(chessModel.getPlayerTurn());
     }
 
     /**
@@ -83,9 +84,9 @@ public class ChessController implements Observer {
      * View update player status
      *
      */
-    public void viewUpdatePlayerStatus() {
+    public void displayCurrentPlayerStatus() {
 
-        chessView.updatePlayerStatusLabel(chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed());
+        chessView.displayPlayerStatus(chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed());
     }
 
     /**
@@ -114,17 +115,17 @@ public class ChessController implements Observer {
      * Switch player turn
      *
      */
-    public void switchPlayerTurn() {
+    public void switchTurnAndUpdateContainer() {
 
-        chessModel.switchTurn();
+        chessModel.switchTurnAndFlipBoard();
 
-        viewUpdatePlayerTurn();
-        viewUpdatePlayerStatus();
+        displayCurrentPlayerTurn();
+        displayCurrentPlayerStatus();
         chessView.updatePieceIcons(chessModel.getBoard());
         chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
-        chessView.setSwitchButtonEnabled(false);
+        chessView.updateSwitchButton(false);
 
-        chessModel.checkPlayCountToSwitch();
+        chessModel.switchPiecesIfPlayCountReached();
     }
 
     /**
@@ -186,13 +187,13 @@ public class ChessController implements Observer {
      */
     public void newGame() {
 
-        setModel(new Chess());
+        setModel(new ChessGame());
         chessModel.addObserver(this);
 
         chessView.updatePieceIcons(chessModel.getBoard());
         chessView.addPieceIconResizer(chessModel.getBoard());
-        chessView.updatePlayerTurnLabel(chessModel.getPlayerTurn());
-        chessView.updatePlayerStatusLabel(false);
+        chessView.displayPlayerTurn(chessModel.getPlayerTurn());
+        chessView.displayPlayerStatus(false);
         chessView.highlightLastMovedPiece(chessModel.getBoard(), null);
     }
 
@@ -204,7 +205,7 @@ public class ChessController implements Observer {
      */
     public void saveGameData(File file) {
 
-        chessView.notifySave(chessModel.saveGame(file));
+        chessView.displaySaveResult(chessModel.writeGameDataToFile(file));
     }
 
     /**
@@ -213,22 +214,19 @@ public class ChessController implements Observer {
      * @param file the file to load game data from
      */
     public boolean loadGameData(File file) {
+        boolean result = chessModel.loadGameDataFromFile(file);
+        chessView.displayLoadResult(result);
 
-        if (chessView.notifyLoad(chessModel.loadGame(file))) {
-        
+        if (result) {
             chessView.updatePieceIcons(chessModel.getBoard());
             chessView.highlightLastMovedPiece(chessModel.getBoard(), chessModel.getLastMovedPiece());
-            viewUpdatePlayerTurn();
-            viewUpdatePlayerStatus();
-            chessView.setSwitchButtonEnabled(chessModel.getHasPlayed());
+            displayCurrentPlayerTurn();
+            displayCurrentPlayerStatus();
+            chessView.updateSwitchButton(chessModel.getHasPlayed());
 
             return true;
         }
-        else {
-            return false;
-        }
-        
-
+        return false;
     }
 
     @Override
@@ -243,18 +241,17 @@ public class ChessController implements Observer {
         switch (event) {
             case PieceMove: {
                 chessView.updatePieceIcons(chessModel.getBoard());
-                chessView.updatePlayerStatusLabel(true);
-                chessView.setSwitchButtonEnabled(true);
+                chessView.displayPlayerStatus(true);
+                chessView.updateSwitchButton(true);
                 break;
             }
             case PieceSwitch: {
-                chessView.notifyPieceSwitch();
-                chessView.updatePieceIcons(chessModel.getBoard());
+                handlePieceSwitchEvent();
                 break;
             }
             case PlayerWin: {
                 int winnerIndex = (int) Event.PlayerWin.getArgument();
-                chessView.promptNewGame(winnerIndex);
+                chessView.promptNewGameConfirmation(winnerIndex);
                 break;
             }
             case NewGame: {
@@ -264,5 +261,10 @@ public class ChessController implements Observer {
             default:
                 break;
         }
+    }
+
+    public void handlePieceSwitchEvent() {
+        chessView.notifyPieceSwitch();
+        chessView.updatePieceIcons(chessModel.getBoard());
     }
 }

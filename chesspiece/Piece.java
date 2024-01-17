@@ -8,7 +8,7 @@ package chesspiece;
 
 import java.awt.*;
 
-import board.Board;
+import chessboard.ChessBoard;
 
 public abstract class Piece {
     private PieceType type;
@@ -53,13 +53,13 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract boolean isMovableTo(Board board, Piece p, int x, int y);
+    public abstract boolean isMovableTo(ChessBoard board, Piece p, int x, int y);
 
-    public Piece toPlus() {
+    public Piece cloneToPlus() {
         return new Plus(x, y, color, flipped);
     }
 
-    public Piece toTime() {
+    public Piece cloneToTime() {
         return new Time(x, y, color, flipped);
     }
 }

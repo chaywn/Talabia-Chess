@@ -3,16 +3,16 @@
 * @author Chay Wen Ning
 * @author Melody Koh
 * @author Goh Shi Yi
+* @author Choo Yun Yi
 */
-
-package base;
+package main;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import chess.Chess;
-import chess.ChessController;
-import chess.ChessView;
+import chessgame.ChessGame;
+import chessgame.ChessController;
+import chessgame.ChessView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 
-public class Main extends JFrame {
+public class ChessGameContainer extends JFrame {
     // Constants
     public final int NO_OF_ROW = 6;
     public final int NO_OF_COLUMN = 7;
@@ -33,6 +33,7 @@ public class Main extends JFrame {
     private final Color cannotPlayColor = Color.RED;
 
     private ChessController chessController;
+    private JFileChooser fc;
 
     private JPanel mainPanel;
     private JPanel glassPane;
@@ -63,9 +64,9 @@ public class Main extends JFrame {
                                                          // panel
     private Point mainPanelMousePoint; // record global mouse point (relative to main panel)
 
-    Main() {
+    ChessGameContainer() {
         // Initialize chess components
-        chessController = new ChessController(new Chess(), new ChessView(this));
+        chessController = new ChessController(new ChessGame(), new ChessView(this));
 
         // Initialize Main Panel with mouse listeners
         mainPanel = new JPanel(new BorderLayout());
@@ -101,7 +102,7 @@ public class Main extends JFrame {
         setVisible(true);
     }
 
-    public JPanel getMaiPanel() {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
@@ -130,7 +131,7 @@ public class Main extends JFrame {
         selectedPieceImage = image;
     }
 
-    public void reset() {
+    public void resetContainer() {
         if (gridToPlay != null) {
             gridToPlay.setBackground(gridToPlayColor);
             gridToPlay.setIcon(gridToPlayIcon);
@@ -202,20 +203,9 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!gameStarted) {
-                    gameStarted = true;
-                    saveBtn.setEnabled(true);
-                    glassPane.repaint();
-
-                    chessController.viewUpdatePlayerTurn();
-                    chessController.viewUpdatePlayerStatus();
+                    startGame();
                 } else {
-                    int opt = JOptionPane.showConfirmDialog(mainPanel,
-                            "Starting a new game will lose your current progress. Are you sure?", "New Game",
-                            JOptionPane.YES_NO_OPTION);
-                    if (opt == JOptionPane.YES_OPTION) {
-                        reset();
-                        chessController.newGame();
-                    }
+                    promptNewGameConfirmation();
                 }
             }
         });
@@ -235,9 +225,7 @@ public class Main extends JFrame {
         switchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!gameStarted)
-                    return;
-                chessController.switchPlayerTurn();
+               switchTurn();
             }
         });
 
@@ -248,11 +236,9 @@ public class Main extends JFrame {
         saveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fc = new JFileChooser();
-                int result = fc.showOpenDialog(null);
+                int result = createOrLocateFile();
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fc.getSelectedFile();
-                    chessController.saveGameData(selectedFile);
+                    saveGame();
                 }
             }
         });
@@ -262,18 +248,9 @@ public class Main extends JFrame {
         loadBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fc = new JFileChooser();
-                int result = fc.showOpenDialog(null);
+                int result = createOrLocateFile();
                 if (result == JFileChooser.APPROVE_OPTION) {
-
-                    File selectedFile = fc.getSelectedFile();
-                    if (chessController.loadGameData(selectedFile)) {
-                    
-                    
-                    gameStarted = true;
-                    saveBtn.setEnabled(true);
-                    glassPane.repaint();
-                    }
+                    loadGame();
                 }
             }
         });
@@ -284,12 +261,7 @@ public class Main extends JFrame {
         exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int opt = JOptionPane.showConfirmDialog(mainPanel,
-                        "Exiting the game will lose your current progress. Are you sure?", "New Game",
-                        JOptionPane.YES_NO_OPTION);
-                if (opt == JOptionPane.YES_OPTION) {
-                    System.exit(0);
-                }
+                promptExitGameConfirmation();
             }
         });
 
@@ -305,6 +277,57 @@ public class Main extends JFrame {
         sidePanel.add(loadBtn);
         sidePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         sidePanel.add(exitBtn);
+    }
+
+    public void switchTurn() {
+        chessController.switchTurnAndUpdateContainer();
+    }
+
+    public void startGame() {
+        gameStarted = true;
+        saveBtn.setEnabled(true);
+        glassPane.repaint();
+
+        chessController.displayCurrentPlayerTurn();
+        chessController.displayCurrentPlayerStatus();
+    }
+
+    public void promptNewGameConfirmation() {
+        int opt = JOptionPane.showConfirmDialog(mainPanel,
+                "Starting a new game will lose your current progress. Are you sure?", "New Game",
+                JOptionPane.YES_NO_OPTION);
+        if (opt == JOptionPane.YES_OPTION) {
+            resetContainer();
+            chessController.newGame();
+        }
+    }
+
+    public void promptExitGameConfirmation() {
+        int opt = JOptionPane.showConfirmDialog(mainPanel,
+                "Exiting the game will lose your current progress. Are you sure?", "New Game",
+                JOptionPane.YES_NO_OPTION);
+        if (opt == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+
+    public int createOrLocateFile() {
+        fc = new JFileChooser();
+        return fc.showOpenDialog(null);
+    }
+
+    public void saveGame() {
+        File selectedFile = fc.getSelectedFile();
+        chessController.saveGameData(selectedFile);
+    }
+
+    public void loadGame() {
+        File selectedFile = fc.getSelectedFile();
+        if (chessController.loadGameData(selectedFile)) {        
+            gameStarted = true;
+            saveBtn.setEnabled(true);
+            glassPane.repaint();
+        }
     }
 
     class MainPanelMouseListener implements MouseListener, MouseMotionListener {
@@ -429,7 +452,7 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Main();
+                new ChessGameContainer();
             }
         });
     }

@@ -1,10 +1,15 @@
-// Coding Member: Chay Wen Ning, Goh Shi Yi
+/**
+*
+* @author Chay Wen Ning
+* @author Melody Koh
+* @author Goh Shi Yi
+* @author Choo Yun Yi
+*/
 
-package chess;
+package chessgame;
 
 import java.awt.*;
 
-import board.Board;
 import chesspiece.Hourglass;
 import chesspiece.Plus;
 import chesspiece.Sun;
@@ -27,10 +32,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Chess implements Subject {
+import chessboard.ChessBoard;
+
+/**
+ * The class ChessGame implements Subject
+ */
+public class ChessGame implements Subject {
     private final int switchCounter = 4;
     private Player[] players = new Player[2];
-    private Board board;
+    private ChessBoard board;
     private int playerTurn;
 
     private Piece selectedPiece;
@@ -38,9 +48,15 @@ public class Chess implements Subject {
 
     private Set<Observer> observerList = new HashSet<>();
 
-    public Chess() {
+    /**
+     *
+     * Chess Game
+     *
+     * @return public
+     */
+    public ChessGame() {
         Player.resetPlayerCount();
-        board = new Board();
+        board = new ChessBoard();
 
         int offSetY = 4;
         boolean opposite = false;
@@ -60,7 +76,7 @@ public class Chess implements Subject {
         return players[index];
     }
 
-    public Board getBoard() {
+    public ChessBoard getBoard() {
         return board;
     }
 
@@ -100,18 +116,15 @@ public class Chess implements Subject {
         return totalPlayCount;
     }
 
-    public void switchTurn() {
+    public void switchTurnAndFlipBoard() {
         playerTurn = playerTurn == 1 ? 0 : 1;
         players[playerTurn].resetHasPlayed();
         board.flip();
     }
 
-    public void checkPlayCountToSwitch() {
+    public void switchPiecesIfPlayCountReached() {
         if (totalPlayCount() == switchCounter) {
-            switchTimePlusPiece();
-            for (Player p : players) {
-                p.resetPlayCount();
-            }
+            switchTimeAndPlusPiece();
             notifyObservers(Event.PieceSwitch);
         }
     }
@@ -188,18 +201,19 @@ public class Chess implements Subject {
     }
 
     // switch Time piece and Plus piece, and vice versa
-    public void switchTimePlusPiece() {
+    public void switchTimeAndPlusPiece() {
         for (Player pl : players) {
             Set<Piece> piecesToAdd = new HashSet<>();
             Set<Piece> piecesToRemove = new HashSet<>();
             Set<Piece> playerPieces = pl.getPieces();
             for (Piece pc : playerPieces) {
-                if (pc.getPieceType() == Piece.PieceType.Time) {
-                    piecesToAdd.add(pc.toPlus());
+                PieceType pType = pc.getPieceType();
+                if (pType == Piece.PieceType.Time) {
+                    piecesToAdd.add(pc.cloneToPlus());
                     piecesToRemove.add(pc);
 
-                } else if (pc.getPieceType() == Piece.PieceType.Plus) {
-                    piecesToAdd.add(pc.toTime());
+                } else if (pType == Piece.PieceType.Plus) {
+                    piecesToAdd.add(pc.cloneToTime());
                     piecesToRemove.add(pc);
                 }
             }
@@ -210,10 +224,11 @@ public class Chess implements Subject {
                 pl.addPiece(pc);
                 board.setPieceAt(pc, pc.getX(), pc.getY());
             }
+            pl.resetPlayCount();
         }
     }
 
-    public boolean saveGame(File file) {
+    public boolean writeGameDataToFile(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
             writer.write(getPlayerTurn() + "\n"); // 0
             writer.write(getPlayer(0).getPlayCount() + "\n"); // 1
@@ -276,7 +291,7 @@ public class Chess implements Subject {
         return colour;
     }
 
-    public boolean loadGame(File fileName) {
+    public boolean loadGameDataFromFile(File fileName) {
         StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;

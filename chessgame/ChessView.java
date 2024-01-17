@@ -3,12 +3,13 @@
 * @author Chay Wen Ning
 * @author Melody Koh
 * @author Goh Shi Yi
+* @author Choo Yun Yi
 */
 
-package chess;
+package chessgame;
 
-import base.Main;
-import board.Board;
+import main.ChessGameContainer;
+import chessboard.ChessBoard;
 import chesspiece.Piece;
 import chesspiece.Piece.PieceType;
 import observer.Event;
@@ -22,11 +23,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
  /**
  * The class ChessView implements Subject
  */ 
 public class ChessView implements Subject{
-    private Main frame;
+    private ChessGameContainer frame;
     private int gridSize;
     private JLabel lastHighlightedGrid;
     private Color lastHighlightedGridColor;
@@ -56,7 +58,7 @@ public class ChessView implements Subject{
         }
     }
 
-    public ChessView(Main frame) {
+    public ChessView(ChessGameContainer frame) {
         this.frame = frame;
         gridSize = frame.GRID_SIZE;
     }
@@ -76,15 +78,15 @@ public class ChessView implements Subject{
         }
     }
 
-    public void updatePlayerTurnLabel(int playerTurn) {
+    public void displayPlayerTurn(int playerTurn) {
         frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));
     }
 
-    public void updatePlayerStatusLabel(boolean hasPlayed) {
+    public void displayPlayerStatus(boolean hasPlayed) {
         frame.getPlayerStatusLabel().setText("Has played: " + hasPlayed);
     }
 
-    public void setSwitchButtonEnabled(boolean enabled) {
+    public void updateSwitchButton(boolean enabled) {
         frame.getSwitchBtn().setEnabled(enabled);
     }
 
@@ -112,10 +114,10 @@ public class ChessView implements Subject{
         JOptionPane.showMessageDialog(frame.getGridPanel(),"Time and Plus pieces will now switch!");
     }
 
-    public boolean promptNewGame(int winnerIndex) {
+    public boolean promptNewGameConfirmation(int winnerIndex) {
         int opt = JOptionPane.showConfirmDialog(frame, "Player " + (winnerIndex + 1) + " has won. Choose \"Yes\" to start a new game, \"No\" to quit game", "Game Over", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
-            frame.reset();
+            frame.resetContainer();
             notifyObservers(Event.NewGame);
             return true;
         }
@@ -125,7 +127,7 @@ public class ChessView implements Subject{
         }
     }
 
-    public void addPieceIconResizer(Board board) {
+    public void addPieceIconResizer(ChessBoard board) {
         // remove exising component listener
         ComponentListener[] listeners = frame.getComponentListeners();
         if (listeners.length > 0) {
@@ -150,7 +152,7 @@ public class ChessView implements Subject{
         });
     }
 
-    public void loadPieceIcons(Board board) {
+    public void loadPieceIcons(ChessBoard board) {
         JPanel gridPanel = frame.getGridPanel();
 
         int row = board.getNoOfRow();
@@ -179,7 +181,7 @@ public class ChessView implements Subject{
         }
     }
 
-    public void updatePieceIcons(Board board) {
+    public void updatePieceIcons(ChessBoard board) {
         JPanel gridPanel = frame.getGridPanel();
 
         int row = board.getNoOfRow();
@@ -205,7 +207,7 @@ public class ChessView implements Subject{
         }
     }
 
-    public void highlightLastMovedPiece(Board board, Piece lastMovedPiece) {
+    public void highlightLastMovedPiece(ChessBoard board, Piece lastMovedPiece) {
         if (lastHighlightedGrid != null) {
             lastHighlightedGrid.setBorder(null);
             lastHighlightedGrid.setBackground(lastHighlightedGridColor);
@@ -225,8 +227,8 @@ public class ChessView implements Subject{
         
     }
 
-    public void notifySave(boolean successful) {
-        if (successful) {
+    public void displaySaveResult(boolean result) {
+        if (result) {
           JOptionPane.showMessageDialog(frame.getGridPanel(),"Save Successfully");
         }
         else{
@@ -234,14 +236,12 @@ public class ChessView implements Subject{
         }
     }
 
-    public boolean notifyLoad(boolean successful) {
-        if (successful) {
+    public void displayLoadResult(boolean result) {
+        if (result) {
           JOptionPane.showMessageDialog(frame.getGridPanel(),"Load Successfully");
-          return true;
         }
         else{
             JOptionPane.showMessageDialog(frame.getGridPanel(),"Error: Load Unsuccessfully");
-            return false;
         }
     }
 }

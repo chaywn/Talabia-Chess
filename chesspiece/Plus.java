@@ -7,7 +7,7 @@ package chesspiece;
 
 import java.awt.*;
 
-import board.Board;
+import chessboard.ChessBoard;
 
 public class Plus extends Piece {
 
@@ -16,9 +16,9 @@ public class Plus extends Piece {
     }
 
     @Override
-    public boolean isMovableTo(Board board, Piece p, int x, int y) {
+    public boolean isMovableTo(ChessBoard board, Piece p, int x, int y) {
         if (p.getX() == x || p.getY() == y) { // can move vertically and horizontally
-            if ((board.getPieceAt(x, y) != null) && (p.getColor() == board.getPieceAt(x, y).getColor())) {
+            if ((board.getPieceAt(x, y) != null) && (p.getColor().equals(board.getPieceAt(x, y).getColor()))) {
                 return false;
             } else if (p.getX() == x) {
                 for (int i = Math.min(p.getY(), y) + 1; i < Math.max(p.getY(), y); i++) {

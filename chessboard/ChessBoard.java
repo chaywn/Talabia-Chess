@@ -5,20 +5,20 @@
 * @author Goh Shi Yi
 */
 
-package board;
+package chessboard;
 
 import player.Player;
 import chesspiece.Piece;
 
 import java.util.Set;
 
-public class Board {
+public class ChessBoard {
     private final int noOfRow = 6;
     private final int noOfColumn = 7;
 
     private Piece[][] pieces = new Piece[noOfRow][noOfColumn];
 
-    public Board() {}
+    public ChessBoard() {}
 
     // getters
     public int getNoOfRow() { return noOfRow; }
