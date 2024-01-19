@@ -15,7 +15,7 @@ import java.awt.Point;
 import java.io.File;
 
 /**
- * The class ChessController implements Observer
+ * The {@code ChessController} class ; Implements {@code Observer} class.
  */
 public class ChessController implements Observer {
     ChessGame chessModel;
@@ -23,11 +23,10 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Chess controller
+     * Constructs a new {@code ChessController}.
      *
-     * @param chessModel the chess model.
-     * @param chessView  the chess view.
-     * @return public
+     * @param chessModel the {@code ChessGame} 
+     * @param chessView  the {@code ChessView} 
      */
     public ChessController(ChessGame chessModel, ChessView chessView) {
 
@@ -40,9 +39,9 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Sets the model
+     * Set the chess model.
      *
-     * @param chessModel the chess model.
+     * @param chessModel the {@code ChessGame} 
      */
     public void setModel(ChessGame chessModel) {
 
@@ -51,7 +50,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * View load piece icons
+     * Calls the chess view to load piece icons.
      *
      */
     public void viewLoadPieceIcons() {
@@ -61,7 +60,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * View add piece icon resizer
+     * Calls the chess view to add piece icon resizer.
      *
      */
     public void viewAddPieceIconResizer() {
@@ -71,7 +70,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * View update player turn
+     * Calls the chess view to display the current player turn.
      *
      */
     public void displayCurrentPlayerTurn() {
@@ -81,7 +80,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * View update player status
+     * Calls the chess view to display the current player's {@code hasPlayed} status.
      *
      */
     public void displayCurrentPlayerStatus() {
@@ -91,9 +90,9 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Current player has played
+     * Return the current player's {@code hasPlayed} status.
      *
-     * @return boolean
+     * @return {@code true} if current player has played a piece move
      */
     public boolean currentPlayerHasPlayed() {
         return chessModel.getPlayer(chessModel.getPlayerTurn()).hasPlayed();
@@ -101,7 +100,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Gets the selected piece image
+     * Get and return the selected piece image from the chess view.
      *
      * @return the selected piece image
      */
@@ -112,7 +111,8 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Switch player turn
+     * Switch and update player turn. Update piece icons and highlight the piece last moved by
+     * the player. Disable the switch turn button.
      *
      */
     public void switchTurnAndUpdateContainer() {
@@ -130,13 +130,14 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Check piece move
+     * Convert coordinates from the Container to the board coordinates and use the coordinates to 
+     * check piece move.
      *
-     * @param source      the source.
-     * @param destination the destination.
-     * @return boolean
+     * @param source      the source {@code Point} 
+     * @param destination the destination {@code Point} 
+     * @return {@code true} if the piece is playable
      */
-    public boolean checkPieceMove(Point source, Point destination) {
+    public boolean convertCoordinateAndCheckPieceMove(Point source, Point destination) {
 
         // Convert coordinate to board coordinate
         Point boardSource = new Point(source.x / chessView.getGridSize(), source.y / chessView.getGridSize());
@@ -148,12 +149,13 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Check piece playability
+     * Convert coordinates from the Container to the board coordinates and use the coordinates to 
+     * check piece playability.
      *
-     * @param piecePoint the piece point.
-     * @return boolean
+     * @param piecePoint the piece point ({@code java.awt.Point})
+     * @return {@code true} if the piece is playable
      */
-    public boolean checkPiecePlayability(java.awt.Point piecePoint) {
+    public boolean ConvertCoordinateAndCheckPiecePlayability(java.awt.Point piecePoint) {
 
         // Convert coordinate to board coordinate
         int boardX = piecePoint.x / chessView.getGridSize();
@@ -162,17 +164,14 @@ public class ChessController implements Observer {
         return chessModel.checkPiecePlayability(boardX, boardY);
     }
 
-    // Get the piece's coordinate and send it to the chess model to check and play
-
     /**
      *
-     * Relay piece point to play
+     * Relay piece point to play.
      *
-     * @param source      the source.
-     * @param destination the destination.
+     * @param source      the source {@code Point} 
+     * @param destination the destination {@code Point} 
      */
-    public void relayPiecePointToPlay(Point source, Point destination) {
-
+    public void ConvertCoordinateAndAttemptPlay(Point source, Point destination) {
         Point boardSource = new Point(source.x / chessView.getGridSize(), source.y / chessView.getGridSize());
         Point boardDestination = new Point(destination.x / chessView.getGridSize(),
                 destination.y / chessView.getGridSize());
@@ -182,7 +181,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * New game
+     * New game.
      *
      */
     public void newGame() {
@@ -199,7 +198,7 @@ public class ChessController implements Observer {
 
     /**
      *
-     * Calls saveGame() from chess model and notifies the result to chess view
+     * Calls saveGame() from chess model and notifies the result to chess view.
      *
      * @param file the file to save game data to
      */
@@ -209,9 +208,10 @@ public class ChessController implements Observer {
     }
 
     /**
-     * Calls loadGame() from chess model and notifies the result to chess view
+     * Calls loadGame() from chess model and notifies the result to chess view.
      *
      * @param file the file to load game data from
+     * @return {code true} if the game load successfully
      */
     public boolean loadGameData(File file) {
         boolean result = chessModel.loadGameDataFromFile(file);
@@ -230,19 +230,10 @@ public class ChessController implements Observer {
     }
 
     @Override
-    /**
-     *
-     * Handles event notified by the ChessController's subjects
-     *
-     * @param event the event to be handled
-     * @see observer.Event
-     */
     public void handleEvent(Event event) {
         switch (event) {
             case PieceMove: {
-                chessView.updatePieceIcons(chessModel.getBoard());
-                chessView.displayPlayerStatus(true);
-                chessView.updateSwitchButton(true);
+                handlePieceMoveEvent();
                 break;
             }
             case PieceSwitch: {
@@ -251,7 +242,7 @@ public class ChessController implements Observer {
             }
             case PlayerWin: {
                 int winnerIndex = (int) Event.PlayerWin.getArgument();
-                chessView.promptNewGameConfirmation(winnerIndex);
+                handlePlayerWinEvent(winnerIndex);
                 break;
             }
             case NewGame: {
@@ -263,8 +254,35 @@ public class ChessController implements Observer {
         }
     }
 
+    /**
+     *
+     * 
+     * When {@code Event.PieceSwitch} is called, calls the chess view to notify the piece switch event and update the piece icons.
+     *
+     */
     public void handlePieceSwitchEvent() {
         chessView.notifyPieceSwitch();
         chessView.updatePieceIcons(chessModel.getBoard());
+    }
+
+    /**
+     *
+     * When {@code Event.PieceMove} event is called, calls the chess view to notify the piece move event and update the piece icons.
+     *
+     */
+    public void handlePieceMoveEvent() {
+        chessView.updatePieceIcons(chessModel.getBoard());
+        chessView.displayPlayerStatus(true);
+        chessView.updateSwitchButton(true);
+    }
+
+    /**
+     *
+     * When {@code Event.PlayerWin} event is called, calls the chess view to notify the player win event and ask
+     * if the player wants to start a new game and show the winner.
+     *
+     */
+    public void handlePlayerWinEvent(int winnerIndex) {
+        chessView.promptNewGameConfirmation(winnerIndex);
     }
 }

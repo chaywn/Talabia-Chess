@@ -4,7 +4,11 @@
 */
 package observer;
 
-// Subject notifies Observer of events
+/**
+ * The {@code Event} enum; Notified by {@code Subject}, and handled by {@code Observer}.
+ * @see observer.Subject
+ * @see observer.Observer
+ */
 public enum Event {
     PieceMove,
     PieceSwitch,
@@ -12,7 +16,7 @@ public enum Event {
     NewGame;
 
     private Object arg;
-
+    
     public Object getArgument() { return arg; }
     public Event returnArgument(Object arg) { 
         this.arg = arg;

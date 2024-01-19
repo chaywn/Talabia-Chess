@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import chessboard.ChessBoard;
 
 /**
- * The class ChessGame implements Subject
+ * The {@code ChessGame} class ; Implements {@code Subject} class.
  */
 public class ChessGame implements Subject {
     private final int switchCounter = 4;
@@ -50,9 +50,8 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Chess Game
+     * Constructs a new {@code ChessGame}.
      *
-     * @return public
      */
     public ChessGame() {
         Player.resetPlayerCount();
@@ -71,27 +70,65 @@ public class ChessGame implements Subject {
         playerTurn = 0;
     }
 
-    // Getters
+    /**
+     *
+     * Get player by the specified index.
+     *
+     * @param index      the index of the player  
+     * 
+     * @return the player index
+     */
     public Player getPlayer(int index) {
         return players[index];
     }
 
+    /**
+     *
+     * Get chess board.
+     *
+     * @return the chess board
+     */
     public ChessBoard getBoard() {
         return board;
     }
 
+    /**
+     *
+     * Get the current's player turn.
+     *
+     * @return player's turn
+     */
     public int getPlayerTurn() {
         return playerTurn;
     }
 
+    /**
+     *
+     * Get the chess piece selected by the player.
+     *
+     * @return the selected chess piece
+     */
     public Piece getSelectedPiece() {
         return selectedPiece;
     }
 
+    /**
+     *
+     * Get the chess piece last moved by the player.
+     *
+     * @return chess piece last moved by the player
+     */
     public Piece getLastMovedPiece() {
         return lastMovedPiece;
     }
 
+    /**
+     *
+     * Get whether the current player has moved a piece. 
+     * Returns true if the current player has moved a piece, else false.
+     *
+     * @return {@code true} if selected player has played a piece move
+     */
     public boolean getHasPlayed() {
         return players[playerTurn].hasPlayed();
     }
@@ -108,6 +145,12 @@ public class ChessGame implements Subject {
         }
     }
 
+    /**
+     *
+     * Calculate the total number of rounds played by each player.
+     *   
+     * @return total number of rounds played by each player 
+     */
     public int totalPlayCount() {
         int totalPlayCount = 0;
         for (Player p : players) {
@@ -115,13 +158,25 @@ public class ChessGame implements Subject {
         }
         return totalPlayCount;
     }
-
+    
+    /**
+     *
+     * Switch the current player turn and reset their hasPlayed.
+     * After that, flip the board.
+     * 
+     */
     public void switchTurnAndFlipBoard() {
         playerTurn = playerTurn == 1 ? 0 : 1;
         players[playerTurn].resetHasPlayed();
         board.flip();
     }
 
+    /**
+     *
+     * Check if the total play count has reached the switch counter.
+     * If so, switch Time and Plus pieces and notify observers of the PieceSwitch Event.
+     * 
+     */
     public void switchPiecesIfPlayCountReached() {
         if (totalPlayCount() == switchCounter) {
             switchTimeAndPlusPiece();
@@ -129,6 +184,14 @@ public class ChessGame implements Subject {
         }
     }
 
+    /**
+     *
+     * Get the chess piece at the specified x, y coordinate and check if the piece is playable.
+     * 
+     * @param x x coordinate  
+     * @param y y coordinate  
+     * @return {@code true} if piece is playable.
+     */
     public boolean checkPiecePlayability(int x, int y) {
         selectedPiece = board.getPieceAt(x, y);
         
@@ -136,6 +199,14 @@ public class ChessGame implements Subject {
                 && selectedPiece.getColor().equals(players[playerTurn].getColor());
     }
 
+    /**
+     *
+     * Check if a piece move can be played from the specified source to the specified destination.
+     * 
+     * @param source the source Point
+     * @param destination the destination Point
+     * @return {@code true} if a piece move can be played from the specified source to the specified destination.
+     */
     public boolean checkPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (checkPiecePlayability(source.x, source.y)
                 && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
@@ -145,15 +216,24 @@ public class ChessGame implements Subject {
         return false;
     }
 
+    /**
+     *
+     * Calls {@code checkPieceMove()}. If it returns true, get the chess piece at the destination and remove it from the board.
+     * After that, move the selected chess piece to the destination.
+     * If the selected chess piece is a {@code Point} piece and it reaches the end of the board, flip the piece.
+     * 
+     * @param source the source ({@code java.awt.Point})
+     * @param destination the destination ({@code java.awt.Point})
+     */
     public void playPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (!checkPieceMove(source, destination))
             return;
 
-        Piece killedPiece = board.getPieceAt(destination.x, destination.y);
+        Piece pieceToCapture = board.getPieceAt(destination.x, destination.y);
 
-        if (killedPiece != null) {
+        if (pieceToCapture != null) {
             int opponentIndex = playerTurn == 1 ? 0 : 1;
-            board.removePiece(killedPiece, players[opponentIndex]);
+            board.removePiece(pieceToCapture, players[opponentIndex]);
         }
 
         board.setPieceAt(selectedPiece, destination.x, destination.y);
@@ -168,6 +248,12 @@ public class ChessGame implements Subject {
         endTurn();
     }
 
+    /**
+     *
+     * Checks if a player has won the game and notifies observers of the PlayerWin Event.
+     * If no player has won, increment the current player's play count and set their hasPlayed to true.
+     * 
+     */
     public void endTurn() {
         Player winner = checkWinner();
         if (winner != null) {
@@ -181,6 +267,12 @@ public class ChessGame implements Subject {
         }
     }
 
+    /**
+     *
+     * Determines whether each player has their Sun piece. If a player has no Sun piece, return the other player as the winner.
+     * 
+     * @return the winning Player, if there is no winner yet, return null
+     */
     public Player checkWinner() {
         // check if each player still have the Sun piece
         for (Player p : players) {
@@ -200,7 +292,11 @@ public class ChessGame implements Subject {
         return null;
     }
 
-    // switch Time piece and Plus piece, and vice versa
+    /**
+     *
+     * Switch the Time pieces to Plus piece and Plus pieces to Time piece.
+     * 
+     */
     public void switchTimeAndPlusPiece() {
         for (Player pl : players) {
             Set<Piece> piecesToAdd = new HashSet<>();
@@ -228,6 +324,13 @@ public class ChessGame implements Subject {
         }
     }
 
+    /**
+     *
+     * Save data of the current game to the specified file.
+     * 
+     * @param file the file to be written
+     * @return {@code true} if no exception occurs
+     */
     public boolean writeGameDataToFile(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
             writer.write(getPlayerTurn() + "\n"); // 0
@@ -258,6 +361,13 @@ public class ChessGame implements Subject {
         }
     }
 
+    /**
+     *
+     * Read and extract the values of red, green and blue to generate the colour.
+     * 
+     * @param string the RGB color code in the form of String
+     * @return color 
+     */
     public Color toColor(String string) {
         String[] colorString = string.split(",");
        
@@ -291,6 +401,13 @@ public class ChessGame implements Subject {
         return colour;
     }
 
+    /**
+     *
+     * Read and load the content of the specified file.
+     * 
+     * @param fileName the file to be read
+     * @return {@code true} if no exception occurs
+     */
     public boolean loadGameDataFromFile(File fileName) {
         StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {

@@ -22,6 +22,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 
+/**
+ * 
+ * The ChessGameContainer class extends JFrame
+ * 
+ */
 public class ChessGameContainer extends JFrame {
     // Constants
     public final int NO_OF_ROW = 6;
@@ -64,6 +69,12 @@ public class ChessGameContainer extends JFrame {
                                                          // panel
     private Point mainPanelMousePoint; // record global mouse point (relative to main panel)
 
+    /**
+     * 
+     * The ChessGameContainer Constructor
+     * 
+     * @return default
+     */
     ChessGameContainer() {
         // Initialize chess components
         chessController = new ChessController(new ChessGame(), new ChessView(this));
@@ -102,35 +113,81 @@ public class ChessGameContainer extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * 
+     * Get the main panel
+     * 
+     * @return the main panel
+     */
     public JPanel getMainPanel() {
         return mainPanel;
     }
 
+    /**
+     * 
+     * Get the grid panel
+     * 
+     * @return the grid panel
+     */
     public JPanel getGridPanel() {
         return gridPanel;
     }
 
-    //getter methods
+    /**
+     * 
+     * Get the glass panel
+     * 
+     * @return the glass panel
+     */
     public JPanel getGlassPane() {
         return glassPane;
     }
 
+    /**
+     * 
+     * Get the player's turn label
+     * 
+     * @return the player's turn label
+     */
     public JLabel getPlayerTurnLabel() {
         return playerTurnLabel;
     }
 
+    /**
+     * 
+     * Get the label of player status
+     * 
+     * @return the label of player status
+     */
     public JLabel getPlayerStatusLabel() {
         return playerStatusLabel;
     }
 
+    /**
+     * 
+     * Get the switch player's turn button
+     * 
+     * @return the switch player's turn button
+     */
     public JButton getSwitchBtn() {
         return switchBtn;
     }
 
+    /**
+     * 
+     * Set the image of the selected piece
+     * 
+     * @param image specified image in the form of Image
+     */
     public void setSelectedPieceImage(Image image) {
         selectedPieceImage = image;
     }
 
+    /**
+     * 
+     * Reset the container
+     * 
+     */
     public void resetContainer() {
         if (gridToPlay != null) {
             gridToPlay.setBackground(gridToPlayColor);
@@ -148,6 +205,11 @@ public class ChessGameContainer extends JFrame {
         selectedPieceImage = null;
     }
 
+    /**
+     * 
+     * Create glass pane
+     * 
+     */
     public void createGlassPane() {
         glassPane = new JPanel() {
             @Override
@@ -172,6 +234,11 @@ public class ChessGameContainer extends JFrame {
         glassPane.setOpaque(false);
     }
 
+    /**
+     * 
+     * Create game panel
+     * 
+     */
     public void createGamePanel() {
         gamePanel = new JPanel(new GridBagLayout());
         gamePanel.setBackground(Color.DARK_GRAY);
@@ -191,6 +258,12 @@ public class ChessGameContainer extends JFrame {
         gamePanel.add(gridPanel);
     }
 
+    /**
+     * 
+     * Create side panel and include all the funcional buttons to facilitate the
+     * game play
+     * 
+     */
     public void createSidePanel() {
         sidePanel = new JPanel();
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
@@ -225,7 +298,7 @@ public class ChessGameContainer extends JFrame {
         switchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               switchTurn();
+                switchTurn();
             }
         });
 
@@ -279,10 +352,20 @@ public class ChessGameContainer extends JFrame {
         sidePanel.add(exitBtn);
     }
 
+    /**
+     * 
+     * Switch player's turn
+     * 
+     */
     public void switchTurn() {
         chessController.switchTurnAndUpdateContainer();
     }
 
+    /**
+     * 
+     * Start the game
+     * 
+     */
     public void startGame() {
         gameStarted = true;
         saveBtn.setEnabled(true);
@@ -292,6 +375,11 @@ public class ChessGameContainer extends JFrame {
         chessController.displayCurrentPlayerStatus();
     }
 
+    /**
+     * 
+     * Show pop-up screen to confirm if the player wants to start a new game
+     * 
+     */
     public void promptNewGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
                 "Starting a new game will lose your current progress. Are you sure?", "New Game",
@@ -302,6 +390,11 @@ public class ChessGameContainer extends JFrame {
         }
     }
 
+    /**
+     * 
+     * Show pop-up screen to confirm if the player wants to quit the game
+     * 
+     */
     public void promptExitGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
                 "Exiting the game will lose your current progress. Are you sure?", "New Game",
@@ -311,57 +404,70 @@ public class ChessGameContainer extends JFrame {
         }
     }
 
+    /**
+     * 
+     * Show pop-up screen to choose or create file
+     * 
+     * @return pop-up screen to choose or create file
+     */
     public int createOrLocateFile() {
         fc = new JFileChooser();
         return fc.showOpenDialog(null);
     }
 
+    /**
+     * 
+     * Save the game
+     * 
+     */
     public void saveGame() {
         File selectedFile = fc.getSelectedFile();
         chessController.saveGameData(selectedFile);
     }
 
+    /**
+     * 
+     * Load a game
+     * 
+     */
     public void loadGame() {
         File selectedFile = fc.getSelectedFile();
-        if (chessController.loadGameData(selectedFile)) {        
+        if (chessController.loadGameData(selectedFile)) {
             gameStarted = true;
             saveBtn.setEnabled(true);
             glassPane.repaint();
         }
     }
 
+    /**
+     * 
+     * MainPanelMouseListener class impements MouseListener and MouseMotionListener.
+     * 
+     */
     class MainPanelMouseListener implements MouseListener, MouseMotionListener {
-        // Mouse listener methods:
-        @Override
-        public void mouseClicked(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
+        /**
+         *
+         * Verify the availability to select a chess piece
+         * 
+         * @param point the pointed position Point
+         */
+        public void selectPieceIfValid(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed()) {
                 selectedPieceImage = null;
                 return;
             }
 
             // set global mouse point
-            mainPanelMousePoint = e.getPoint();
+            mainPanelMousePoint = point;
 
             // determine the relative point at grid panel
-            Point relPoint = new Point((int) (e.getPoint().x - gridPanel.getLocation().getX()),
-                    (int) (e.getPoint().y - gridPanel.getLocation().getY()));
+            Point relPoint = new Point((int) (point.x - gridPanel.getLocation().getX()),
+                    (int) (point.y - gridPanel.getLocation().getY()));
             // set grid panel mouse points for source and destination
             gridPanelMousePoints[0] = relPoint;
             gridPanelMousePoints[1] = relPoint;
 
-            if (!chessController.checkPiecePlayability(gridPanelMousePoints[0])) {
+            if (!chessController.ConvertCoordinateAndCheckPiecePlayability(gridPanelMousePoints[0])) {
                 return;
             }
 
@@ -376,18 +482,21 @@ public class ChessGameContainer extends JFrame {
 
                 selectedPieceImage = chessController.getSelectedPieceImage();
             }
-
-            glassPane.repaint();
         }
 
-        @Override
-        public void mouseReleased(MouseEvent e) {
+        /**
+         *
+         * Verify the availability to play a chess piece
+         * 
+         * @param point the pointed position Point
+         */
+        public void playPieceIfValid(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed())
                 return;
 
             // determine the relative point at grid panel
-            Point relPoint = new Point((int) (e.getPoint().x - gridPanel.getLocation().getX()),
-                    (int) (e.getPoint().y - gridPanel.getLocation().getY()));
+            Point relPoint = new Point((int) (point.x - gridPanel.getLocation().getX()),
+                    (int) (point.y - gridPanel.getLocation().getY()));
             // set grid panel mouse points for destination
             gridPanelMousePoints[1] = relPoint;
 
@@ -405,16 +514,16 @@ public class ChessGameContainer extends JFrame {
             }
 
             glassPane.repaint();
-            chessController.relayPiecePointToPlay(gridPanelMousePoints[0], gridPanelMousePoints[1]);
+            chessController.ConvertCoordinateAndAttemptPlay(gridPanelMousePoints[0], gridPanelMousePoints[1]);
         }
 
-        // Mouse motion listener methods:
-        @Override
-        public void mouseMoved(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
+        /**
+         *
+         * Show whether a piece can be placed at the specified position
+         * 
+         * @param point the pointed position Point
+         */
+        public void showIsPositionPlacable(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed() || selectedPieceImage == null)
                 return;
 
@@ -424,31 +533,102 @@ public class ChessGameContainer extends JFrame {
             }
 
             // set global mouse point
-            mainPanelMousePoint = e.getPoint();
+            mainPanelMousePoint = point;
             // determine the relative point at grid panel
-            Point relPoint = new Point((int) (e.getPoint().x - gridPanel.getLocation().getX()),
-                    (int) (e.getPoint().y - gridPanel.getLocation().getY()));
-            // set grid panel mouse points for source and destination
+            Point relPoint = new Point((int) (point.x - gridPanel.getLocation().getX()),
+                    (int) (point.y - gridPanel.getLocation().getY()));
+            // set grid panel mouse points for destination
             gridPanelMousePoints[1] = relPoint;
-
-            chessController.checkPieceMove(gridPanelMousePoints[0], gridPanelMousePoints[1]);
 
             Component selectedComp = gridPanel.getComponentAt(gridPanelMousePoints[1]);
             if (selectedComp != null) {
                 try {
                     selectedGrid = (JLabel) selectedComp;
                     selectedGridColor = selectedGrid.getBackground();
-                    playabilityColor = chessController.checkPieceMove(gridPanelMousePoints[0],
+                    playabilityColor = chessController.convertCoordinateAndCheckPieceMove(gridPanelMousePoints[0],
                             gridPanelMousePoints[1]) ? canPlayColor : cannotPlayColor;
                     selectedGrid.setBackground(playabilityColor);
-                } catch (ClassCastException ev) {
+                } catch (ClassCastException ex) {
                 }
             }
+        }
 
+        // Mouse listener methods:
+        @Override
+        /**
+         * 
+         * When mouse is clicked
+         * 
+         */
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        /**
+         * 
+         * When mouse entered
+         * 
+         */
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        /**
+         * 
+         * When mouse exited
+         * 
+         */
+        public void mouseExited(MouseEvent e) {
+        }
+
+        @Override
+        /**
+         * 
+         * When mouse is pressed
+         * 
+         */
+        public void mousePressed(MouseEvent e) {
+            selectPieceIfValid(e.getPoint());
+            glassPane.repaint();
+        }
+
+        @Override
+        /**
+         * 
+         * When mouse is released
+         * 
+         */
+        public void mouseReleased(MouseEvent e) {
+            playPieceIfValid(e.getPoint());
+        }
+
+        // Mouse motion listener methods:
+        @Override
+        /**
+         * 
+         * When mouse is moved
+         * 
+         */
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        @Override
+        /**
+         * 
+         * When mouse is dragged
+         * 
+         */
+        public void mouseDragged(MouseEvent e) {
+            showIsPositionPlacable(e.getPoint());
             glassPane.repaint();
         }
     }
 
+        /**
+         * 
+         * Main method to run the game.
+         * 
+         */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
