@@ -1,25 +1,28 @@
-/**
-*
-* @author Melody Koh
-*/
-
 package chesspiece;
 
 import java.awt.*;
 
 import chessboard.ChessBoard;
+
 /**
- * The {@code Time} class ; Extends {@code Piece} class.
+ * The {@code Time} class; Extends {@code Piece} abstract class.
+ * Every {@code Time} piece has a x, y coordinate, a {@code PieceType}, and a {@code flipped} boolean to represent the orientation of the {@code Time} piece.
+ * 
+ * @see chesspiece.Piece
+ * @see chesspiece.Piece.PieceType
+ * @author Melody Koh Si Jie
  */
 public class Time extends Piece {
     /**
      *
-     * Constructs a new {@code Time} piece.
+     * Constructs a new {@code Time} piece. This method calls the super constructor method {@code Piece}.
      *
-     * @param x x coordinate  
-     * @param y y coordinate  
-     * @param color the piece color in the form of Color
-     * @param flipped the orientation of the piece in the form of boolean
+     * @param x       the x coordinate
+     * @param y       the y coordinate 
+     * @param color   the {@code Color} of the {@code Time} piece
+     * @param flipped the orientation of the {@code Time} piece, set {@code true} to show the piece flipped 180 degree
+     * @see chesspiece.Piece#Piece(int, int, Color, Boolean)
+     * @author Melody Koh Si Jie
      */
     public Time(int x, int y, Color color, Boolean flipped) {
         super(x, y, color, flipped);
@@ -27,39 +30,41 @@ public class Time extends Piece {
 
     /**
      *
-     * Movement of the Time piece
+     * Validates a {@code Time} piece movement to the specified x, y coordinates.
+     * Returns {@code true} if the {@code Time} piece is movable to the specified x, y coordinates.
+     * This method is to be overwritten and implemented by subclasses.
      * 
-     * @param board the {@code ChessBoard} 
-     * @param p     the {@code Piece} 
-     * @param x     x coordinate  
-     * @param y     y coordinate  
-     * @return {@code true} if the piece is movable
+     * @param board the {@code ChessBoard} object
+     * @param x the x coordinate to move to  
+     * @param y the y coordinate to move to
+     * @return {@code true} if the {@code Time} piece is movable to the specified x, y coordinates
+     * @author Melody Koh Si Jie
      */
     @Override
-    public boolean isMovableTo(ChessBoard board, Piece p, int x, int y) {
+    public boolean isMovableTo(ChessBoard board, int x, int y) {
         Piece piece = board.getPieceAt(x, y);
-        if (Math.abs(p.getX() - x) == Math.abs(p.getY() - y)) {
-            for (int i = 1; i < Math.abs(p.getX() - x); i++) {
-                if (p.getX() > x && p.getY() > y) {
-                    if (board.getPieceAt(p.getX() - i, p.getY() - i) != null) {
+        if (Math.abs(getX() - x) == Math.abs(getY() - y)) {
+            for (int i = 1; i < Math.abs(getX() - x); i++) {
+                if (getX() > x && getY() > y) {
+                    if (board.getPieceAt(getX() - i, getY() - i) != null) {
                         return false;
                     }
-                } else if (p.getX() < x && p.getY() > y) {
-                    if (board.getPieceAt(p.getX() + i, p.getY() - i) != null) {
+                } else if (getX() < x && getY() > y) {
+                    if (board.getPieceAt(getX() + i, getY() - i) != null) {
                         return false;
                     }
-                } else if (p.getX() > x && p.getY() < y) {
-                    if (board.getPieceAt(p.getX() - i, p.getY() + i) != null) {
+                } else if (getX() > x && getY() < y) {
+                    if (board.getPieceAt(getX() - i, getY() + i) != null) {
                         return false;
                     }
-                } else if (p.getX() < x && p.getY() < y) {
-                    if (board.getPieceAt(p.getX() + i, p.getY() + i) != null) {
+                } else if (getX() < x && getY() < y) {
+                    if (board.getPieceAt(getX() + i, getY() + i) != null) {
                         return false;
                     }
                 }
             }
             if (piece != null) {
-                if (piece.getColor().equals(p.getColor())) {
+                if (piece.getColor().equals(getColor())) {
                     return false;
                 }
             }

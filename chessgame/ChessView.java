@@ -1,11 +1,3 @@
-/**
-*
-* @author Chay Wen Ning
-* @author Melody Koh
-* @author Goh Shi Yi
-* @author Choo Yun Yi
-*/
-
 package chessgame;
 
 import main.ChessGameContainer;
@@ -24,7 +16,25 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
-The {@code ChessView} class ; Implements {@code Subject} class.
+ * The {@code ChessView} class; Implements {@code Subject} class.
+ * This class is part of the <a href="https://www.geeksforgeeks.org/mvc-design-pattern/">MVC design pattern</a>, and it acts as a view in the MVC relationship.
+ * The {@code ChessView} presents relevant game data of the {@code ChessGame} in the {@code ChessGameContainer}, such as the chess pieces on the chess board, 
+ * the current player turn, and the last moved piece.
+ * It is called by the {@code ChessController}.
+ * <p>
+ * Additionally, this class is part of the <a href="https://www.geeksforgeeks.org/observer-pattern-set-1-introduction/">Observer design pattern</a>, and it acts as an {@code Subject}.
+ * When being referenced to the {@code ChessController}, the {@code ChessView} adds the former as an {@code Observer} and notifies {@code Event} to it for subsequence actions.
+ * 
+ * @see observer.Subject
+ * @see chessgame.ChessController
+ * @see chessgame.ChessGame
+ * @see main.ChessGameContainer
+ * @see observer.Observer
+ * @see observer.Event
+ * @author Chay Wen Ning
+ * @author Melody Koh Si Jie
+ * @author Goh Shi Yi
+ * @author Choo Yun Yi
  */
 public class ChessView implements Subject {
     private ChessGameContainer frame;
@@ -34,35 +44,61 @@ public class ChessView implements Subject {
 
     Set<Observer> observerList = new HashSet<>();
 
-    // Represent different types of images associated with chess pieces
+
+    /**
+     *
+     * The {@code PieceImageType} Enum; Represents the types of piece images.
+     * Each {@code PieceImageType} contains a {@code HashMap<Color, Image>COLOR_PATH_MAP} that maps piece {@code Image} to their corresponding {@code Color} type.
+     * The types of {@code Color} are {@code Color.YELLOW} and {@code Color.BLUE}.
+     *
+     * @see chesspiece.Piece.PieceType
+     * @author Chay Wen Ning
+     */
     private enum PieceImageType {
-        Hourglass("Hourglass.png"),
-        Plus("Plus.png"),
-        PointDown("Point(down).png"),
-        PointUp("Point(up).png"),
-        Sun("Sun.png"),
-        Time("Time.png");
+        HOURGLASS("Hourglass.png"),
+        PLUS("Plus.png"),
+        POINTDOWN("Point(down).png"),
+        POINTUP("Point(up).png"),
+        SUN("Sun.png"),
+        TIME("Time.png");
 
-        private final HashMap<Color, Image> colorPathMap = new HashMap<>();
+        private final HashMap<Color, Image> COLOR_PATH_MAP = new HashMap<>();
 
+        /**
+         *
+         * Constructs a new {@code PieceImageType} and maps its piece {@code Image} of {@code Color.YELLOW} and {@code Color.BLUE} to their corresponding color.
+         *
+         * @param imageName the filename of the {@code Image}
+         * @author Chay Wen Ning
+         */
         private PieceImageType(String imageName) {
-            String yellowPiecePath = "../Icons/YellowPieces/" + imageName;
-            String bluePiecePath = "../Icons/BluePieces/" + imageName;
+            String yellowPiecePath = "/Icons/YellowPieces/" + imageName;
+            String bluePiecePath = "/Icons/BluePieces/" + imageName;
 
-            colorPathMap.put(Color.YELLOW, new ImageIcon(this.getClass().getResource(yellowPiecePath)).getImage());
-            colorPathMap.put(Color.BLUE, new ImageIcon(this.getClass().getResource(bluePiecePath)).getImage());
+            COLOR_PATH_MAP.put(Color.YELLOW, new ImageIcon(this.getClass().getResource(yellowPiecePath)).getImage());
+            COLOR_PATH_MAP.put(Color.BLUE, new ImageIcon(this.getClass().getResource(bluePiecePath)).getImage());
         }
 
+        /**
+         *
+         * Returns the {@code Image} of the {@code PieceImageType} with the specified {@code Color}. 
+         * If the specified {@code Color} is not {@code Color.YELLOW} or {@code Color.BLUE}, returns {@code null}.
+         *
+         * @param color the {@code Color} to return the {@code Image} with
+         * @returns the {@code Image} of the {@code PieceImageType} with the specified {@code Color}, {@code null} if the specified {@code Color} is not {@code Color.YELLOW} or {@code Color.BLUE}
+         * @author Chay Wen Ning
+         */
         public final Image getImage(Color color) {
-            return colorPathMap.get(color);
+            return COLOR_PATH_MAP.get(color);
         }
     }
 
     /**
      *
-     * Constructs a new {@code ChessView}.
+     * Constructs a new {@code ChessView} object, and gets a reference of the {@code ChessGameContainer} object.
      *
-     * @param frame the {@code ChessGameContainer}
+     * @param frame the {@code ChessGameContainer} object 
+     * @author Chay Wen Ning
      */
     public ChessView(ChessGameContainer frame) {
         this.frame = frame;
@@ -70,30 +106,39 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Get the grid size
+     * Returns the grid size of the chess piece.
      * 
-     * @return the grid size
+     * @return the grid size of the chess piece
+     * @author Chay Wen Ning
      */
     public int getGridSize() {
         return gridSize;
     }
 
-    @Override
     /**
-     * Add observer
-     * @param o the {@code Observer}
+     *
+     * Adds an {@code Observer} object.
+     *
+     * @param o     the {@code Observer} object to be added
+     * @see observer.Observer
+     * @author Chay Wen Ning
      */
+    @Override
     public void addObserver(Observer o) {
         observerList.add(o);
     }
 
-    @Override
     /**
      *
-     * Notify Observer to response to the event triggered
+     * Notifies the {@code Observer} object(s) to handle the fired {@code Event}.
      *
-     * @param event the {@code Event}.
+     * @param event  the {@code Event} to be notified
+     * @see #addObserver(Observer)
+     * @see observer.Observer
+     * @see observer.Event
+     * @author Chay Wen Ning
      */
+    @Override
     public void notifyObservers(Event event) {
         for (Observer o : observerList) {
             o.handleEvent(event);
@@ -101,46 +146,56 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Show the player's turn
+     * Displays the specified player's turn.
      * 
-     * @param playerTurn the player's turn  
+     * @param playerTurn the player's turn (in index form)
+     * @author Chay Wen Ning
      */
     public void displayPlayerTurn(int playerTurn) {
         frame.getPlayerTurnLabel().setText("Player's Turn: " + (playerTurn + 1));
     }
 
     /**
-     * Show the player's status
+     * Displays a player's status.
      * 
-     * @param hasPlayed indicates whether the player has played in the form of boolean
+     * @param hasPlayed the player's {@code hasPlayed} status
+     * @author Chay Wen Ning
      */
     public void displayPlayerStatus(boolean hasPlayed) {
         frame.getPlayerStatusLabel().setText("Has played: " + hasPlayed);
     }
 
     /**
-     * Update and enable the switch button
+     * Update the switch button in the referenced {@code ChessGameContainer} to the specified enabled state. 
+     * If the enabled state is {@code true}, the switch button will be enabled - {@code setEnabled(true)}.
+     * Otherwise if the enabled state is {@code false}, the switch button will be disabled - {@code setEnabled(false)}.
      * 
-     * @param enabled whether the switch is enabled in the form of boolean
+     * @param enabled the enabled state to update the switch button to
+     * @author Choo Yun Yi
      */
     public void updateSwitchButton(boolean enabled) {
         frame.getSwitchBtn().setEnabled(enabled);
     }
 
     /**
-     * Get the piece image
+     * Returns the {@code Image} that represents the specified {@code Piece} object. 
+     * This method calls {@code PieceImageType.getImage} to retrieve the {@code Image} of a {@code PieceImageType} that corresponds to the {@code PieceType} of the chess piece.
      * 
-     * @param piece the {@code Piece} 
-     * @return the piece image
+     * @param piece the {@code Piece} object
+     * @return the {@code Image} of the piece
+     * @see chessgame.ChessView.PieceImageType
+     * @see chessgame.ChessView.PieceImageType#getImage(Color)
+     * @see chesspiece.Piece.PieceType
+     * @author Chay Wen Ning
      */
     public Image getPieceImage(Piece piece) {
         if (piece == null)
             return null;
 
         Image image;
-        if (piece.getPieceType() == PieceType.Point) {
-            image = piece.isFlipped() ? PieceImageType.PointDown.getImage(piece.getColor())
-                    : PieceImageType.PointUp.getImage(piece.getColor());
+        if (piece.getPieceType() == PieceType.POINT) {
+            image = piece.isFlipped() ? PieceImageType.POINTDOWN.getImage(piece.getColor())
+                    : PieceImageType.POINTUP.getImage(piece.getColor());
         } else {
             PieceImageType pieceImageType = PieceImageType.valueOf(piece.getPieceType().toString());
             image = pieceImageType.getImage(piece.getColor());
@@ -150,24 +205,34 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Update the grid size
+     * Updates the value of the grid size of chess piece. 
+     * 
+     * @author Chay Wen Ning
      */
     public void updateGridSize() {
         gridSize = frame.getGridPanel().getComponent(0).getWidth();
     }
 
     /**
-     * Notify the player that Time and Plus pieces will be switched after two turns.
+     *
+     * Displays a message dialog in the referenced {@code ChessGameContainer} to notify the piece switch event between {@code Time} and {@code Plus} pieces.
+     * 
+     * @author Chay Wen Ning
      */
     public void notifyPieceSwitch() {
         JOptionPane.showMessageDialog(frame.getGridPanel(), "Time and Plus pieces will now switch!");
     }
 
     /**
-     * Prompt a new game confrimation
      * 
-     * @param winnerIndex the index of winner  
-     * @return {@code true} if player confirms a new game
+     * Prompts a new game confirmation in the referenced {@code ChessGameContainer}.
+     * This method is called after a {@code Player} has won the game, and it declares the winner in the prompt.
+     * If user selects "Yes" and confirms a new game, notifies the {@code Observer} object(s) of {@code Event.NEWGAME} and returns {@code true}.
+     * Otherwise if user selects "No", exits the application.
+     * 
+     * @param winnerIndex the index of winner {@code Player}
+     * @return {@code true} if user selects "Yes" and confirms a new game
+     * @author Chay Wen Ning
      */
     public boolean promptNewGameConfirmation(int winnerIndex) {
         int opt = JOptionPane.showConfirmDialog(frame,
@@ -175,7 +240,7 @@ public class ChessView implements Subject {
                 "Game Over", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
             frame.resetContainer();
-            notifyObservers(Event.NewGame);
+            notifyObservers(Event.NEWGAME);
             return true;
         } else {
             System.exit(0);
@@ -184,9 +249,13 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Add the piece icon resizer
+     * Removes existing {@code ComponentListener} of the referenced {@code ChessGameContainer} and attach a new {@code ComponentAdapter} to the container that resizes the piece {@code Icon} in the container whenever the component is resized.
+     * This method calls {@code updateGridSize}, and {@code updatePieceIcons} to resize piece {@code Icon}.
      * 
-     * @param board the {@code ChessBoard} 
+     * @param board the {@code ChessBoard} object as reference
+     * @see #updateGridSize()
+     * @see #updatePieceIcons(ChessBoard)
+     * @author Chay Wen Ning
      */
     public void addPieceIconResizer(ChessBoard board) {
         // remove exising component listener
@@ -219,9 +288,11 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Load the piece icons to the board
+     * Loads piece {@code Icon} for every {@code Piece} object in the specified {@code ChessBoard} object into the referenced {@code ChessGameContainer}.
      * 
-     * @param board the {@code ChessBoard} 
+     * @param board the {@code ChessBoard} object 
+     * @see #updatePieceIcons(ChessBoard)
+     * @author Chay Wen Ning
      */
     public void loadPieceIcons(ChessBoard board) {
         JPanel gridPanel = frame.getGridPanel();
@@ -253,9 +324,11 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Udate the piece icons
+     * Update piece {@code Icon} for every {@code Piece} object in the specified {@code ChessBoard} object into the referenced {@code ChessGameContainer}.
      * 
-     * @param board the {@code ChessBoard}
+     * @param board the {@code ChessBoard} object
+     * @see #loadPieceIcons(ChessBoard)
+     * @author Chay Wen Ning
      */
     public void updatePieceIcons(ChessBoard board) {
         JPanel gridPanel = frame.getGridPanel();
@@ -284,12 +357,12 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Highlight the chess piece last moved by the player
+     * Highlights the {@code Piece} object last moved by the player in the referenced {@code ChessGameContainer}.
      * 
-     * @param board          the {@code ChessBoard} 
-     * @param lastMovedPiece the {@code Piece}  last moved by the player 
+     * @param lastMovedPiece the {@code Piece} object last moved by the player 
+     * @author Chay Wen Ning
      */
-    public void highlightLastMovedPiece(ChessBoard board, Piece lastMovedPiece) {
+    public void highlightLastMovedPiece(Piece lastMovedPiece) {
         if (lastHighlightedGrid != null) {
             lastHighlightedGrid.setBorder(null);
             lastHighlightedGrid.setBackground(lastHighlightedGridColor);
@@ -301,7 +374,6 @@ public class ChessView implements Subject {
         JPanel gridPanel = frame.getGridPanel();
         JLabel grid = (JLabel) gridPanel
                 .getComponent(lastMovedPiece.getX() + lastMovedPiece.getY() * frame.NO_OF_COLUMN);
-        // grid.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.ORANGE));
 
         lastHighlightedGrid = grid;
         lastHighlightedGridColor = grid.getBackground();
@@ -310,9 +382,14 @@ public class ChessView implements Subject {
     }
 
     /**
-     * Display the result of a save
+     * Displays the result of a save game call. 
+     * This method is called after a user saves their game progress.
      * 
-     * @param result whether the file is saved in the form of boolean
+     * @param result the result of a save game call
+     * @see main.ChessGameContainer#saveGame()
+     * @see chessgame.ChessController#saveGameData(java.io.File)
+     * @see #displayLoadResult(boolean)
+     * @author Goh Shi Yi
      */
     public void displaySaveResult(boolean result) {
         if (result) {
@@ -322,10 +399,16 @@ public class ChessView implements Subject {
         }
     }
 
+
     /**
-     * Display the result of a load
+     * Displays the result of a load game call. 
+     * This method is called after a user loads their game progress.
      * 
-     * @param result whether the file is loaded in the form of boolean
+     * @param result the result of a load game call
+     * @see main.ChessGameContainer#loadGame()
+     * @see chessgame.ChessController#loadGameData(java.io.File)
+     * @see #displaySaveResult(boolean)
+     * @author Choo Yun Yi
      */
     public void displayLoadResult(boolean result) {
         if (result) {

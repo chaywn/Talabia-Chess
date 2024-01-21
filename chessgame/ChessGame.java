@@ -1,11 +1,3 @@
-/**
-*
-* @author Chay Wen Ning
-* @author Melody Koh
-* @author Goh Shi Yi
-* @author Choo Yun Yi
-*/
-
 package chessgame;
 
 import java.awt.*;
@@ -35,10 +27,28 @@ import java.util.regex.Pattern;
 import chessboard.ChessBoard;
 
 /**
- * The {@code ChessGame} class ; Implements {@code Subject} class.
+ * The {@code ChessGame} class; Implements {@link observer.Subject Subject} class.
+ * This class is part of the <a href="https://www.geeksforgeeks.org/mvc-design-pattern/">MVC design pattern</a>, and it acts as a model in the MVC relationship.
+ * The {@code ChessGame} represents a round of game consisting of two {@code Player} and a {@code ChessBoard}.
+ * It contains the game logic and relevant game data such as the current player turn, and the last moved piece.
+ * It is called by the {@code ChessController}.
+ * <p>
+ * Additionally, this class is part of the <a href="https://www.geeksforgeeks.org/observer-pattern-set-1-introduction/">Observer design pattern</a>, and it acts as an {@code Subject}.
+ * When being referenced to the {@code ChessController}, the {@code ChessGame} adds the former as an {@code Observer} and notifies {@code Event} to it for subsequence actions.
+ * 
+ * @see observer.Subject
+ * @see player.Player
+ * @see chessboard.ChessBoard
+ * @see chessgame.ChessController
+ * @see observer.Observer
+ * @see observer.Event
+ * @author Chay Wen Ning
+ * @author Melody Koh
+ * @author Goh Shi Yi
+ * @author Choo Yun Yi
  */
 public class ChessGame implements Subject {
-    private final int switchCounter = 4;
+    private final int SWITCH_COUNTER = 4;
     private Player[] players = new Player[2];
     private ChessBoard board;
     private int playerTurn;
@@ -50,8 +60,11 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Constructs a new {@code ChessGame}.
+     * Constructs a new {@code ChessGame} with a {@code ChessBoard} object and two {@code Player} objects. 
      *
+     * @see chessboard.ChessBoard
+     * @see player.Player
+     * @author Chay Wen Ning
      */
     public ChessGame() {
         Player.resetPlayerCount();
@@ -61,7 +74,7 @@ public class ChessGame implements Subject {
         boolean opposite = false;
         for (int i = 0; i < 2; i++) {
             players[i] = new Player();
-            players[i].initializePieces(board, 0, offSetY, opposite);
+            players[i].initializePieces(0, offSetY, opposite);
             board.setPlayerPiece(players[i]);
             offSetY = 0;
             opposite = true;
@@ -72,11 +85,11 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get player by the specified index.
+     * Returns a {@code Player} object of the specified index.
      *
-     * @param index      the index of the player  
-     * 
-     * @return the player index
+     * @param index  the index of a {@code Player} object
+     * @return the {@code Player} object of the specified index
+     * @author Chay Wen Ning
      */
     public Player getPlayer(int index) {
         return players[index];
@@ -84,9 +97,11 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get chess board.
+     * Returns the chess game's {@code ChessBoard} object.
      *
-     * @return the chess board
+     * @return the chess game's {@code ChessBoard} object
+     * @see chessboard.ChessBoard
+     * @author Chay Wen Ning
      */
     public ChessBoard getBoard() {
         return board;
@@ -94,9 +109,10 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get the current's player turn.
+     * Returns the current player turn.
      *
-     * @return player's turn
+     * @return the current player turn
+     * @author Chay Wen Ning
      */
     public int getPlayerTurn() {
         return playerTurn;
@@ -104,9 +120,10 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get the chess piece selected by the player.
+     * Returns the {@code Piece} object selected by the player.
      *
-     * @return the selected chess piece
+     * @return the {@code Piece} object selected by the player
+     * @author Chay Wen Ning
      */
     public Piece getSelectedPiece() {
         return selectedPiece;
@@ -114,9 +131,10 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get the chess piece last moved by the player.
+     * Returns the {@code Piece} object last moved by the player.
      *
-     * @return chess piece last moved by the player
+     * @return the {@code Piece} object last moved by the player
+     * @author Chay Wen Ning
      */
     public Piece getLastMovedPiece() {
         return lastMovedPiece;
@@ -124,20 +142,40 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Get whether the current player has moved a piece. 
+     * Returns the current player's {@code HasPlayed} status. 
      * Returns true if the current player has moved a piece, else false.
      *
-     * @return {@code true} if selected player has played a piece move
+     * @return {@code true} if the current player's {@code hasPlayed == true}
+     * @see player.Player#hasPlayed()
+     * @author Choo Yun Yi
      */
     public boolean getHasPlayed() {
         return players[playerTurn].hasPlayed();
     }
 
+    /**
+     *
+     * Adds an {@code Observer} object.
+     *
+     * @param o  the {@code Observer} object to be added
+     * @see observer.Observer
+     * @author Chay Wen Ning
+     */
     @Override
     public void addObserver(Observer o) {
         observerList.add(o);
     }
 
+    /**
+     *
+     * Notifies the {@code Observer} object(s) to handle the fired {@code Event}.
+     *
+     * @param event  the {@code Event} to be notified
+     * @see #addObserver(Observer)
+     * @see observer.Observer
+     * @see observer.Event
+     * @author Chay Wen Ning
+     */
     @Override
     public void notifyObservers(Event event) {
         for (Observer o : observerList) {
@@ -147,9 +185,11 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Calculate the total number of rounds played by each player.
+     * Calculates and returns the total number of rounds played by each player.
      *   
-     * @return total number of rounds played by each player 
+     * @return the total number of rounds played by each player 
+     * @see player.Player#getPlayCount()
+     * @author Melody Koh Si Jie
      */
     public int totalPlayCount() {
         int totalPlayCount = 0;
@@ -161,9 +201,12 @@ public class ChessGame implements Subject {
     
     /**
      *
-     * Switch the current player turn and reset their hasPlayed.
-     * After that, flip the board.
+     * Switches the current player turn and reset their {@code hasPlayed} status.
+     * After that, flip the chess board.
      * 
+     * @see player.Player#resetHasPlayed()
+     * @see chessboard.ChessBoard#flip()
+     * @author Chay Wen Ning
      */
     public void switchTurnAndFlipBoard() {
         playerTurn = playerTurn == 1 ? 0 : 1;
@@ -173,24 +216,31 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Check if the total play count has reached the switch counter.
-     * If so, switch Time and Plus pieces and notify observers of the PieceSwitch Event.
+     * Checks if the total play count has reached the switch counter.
+     * If so, switch {@code Time} and {@code Plus} pieces and notify observers with {@code Event.PIECESWTICH}.
+     * @author Chay Wen Ning
      * 
+     * @see chesspiece.Piece#cloneToPlus()
+     * @see chesspiece.Piece#cloneToTime()
+     * @see observer.Event#PIECESWTICH
      */
     public void switchPiecesIfPlayCountReached() {
-        if (totalPlayCount() == switchCounter) {
+        if (totalPlayCount() == SWITCH_COUNTER) {
             switchTimeAndPlusPiece();
-            notifyObservers(Event.PieceSwitch);
+            notifyObservers(Event.PIECESWITCH);
         }
     }
 
     /**
      *
-     * Get the chess piece at the specified x, y coordinate and check if the piece is playable.
+     * Gets the {@code Piece} object at the specified x, y coordinate on the chess board and check if the piece is playable. 
+     * Returns {@code true} if the piece is playable. 
+     * If there is no piece at the specified x, y coordinate or the piece is not playable, returns {@code false}.
      * 
-     * @param x x coordinate  
-     * @param y y coordinate  
-     * @return {@code true} if piece is playable.
+     * @param x the x coordinate  
+     * @param y the y coordinate  
+     * @return {@code true} if the {@code Piece} object located at the specified x, y coordinate is playable
+     * @author Melody Koh Si Jie
      */
     public boolean checkPiecePlayability(int x, int y) {
         selectedPiece = board.getPieceAt(x, y);
@@ -201,16 +251,21 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Check if a piece move can be played from the specified source to the specified destination.
+     * Checks if the {@code Piece} object at the specified source {@code Point} can be moved to the specified destination {@code Point}.
+     * Returns {@code true} if the piece can be moved from the specified source to the specified destination. 
+     * If there is no piece object at the specified source or the piece cannot be moved to the specified destination, returns {@code false}.
      * 
-     * @param source the source Point
-     * @param destination the destination Point
-     * @return {@code true} if a piece move can be played from the specified source to the specified destination.
+     * @param source the source {@code Point}
+     * @param destination the destination {@code Point}
+     * @return {@code true} if the {@code Piece} object at the specified source can be moved to the specified destination.
+     * @see #checkPiecePlayability(int, int)
+     * @see chesspiece.Piece#isMovableTo(ChessBoard, Piece, int, int)
+     * @author Chay Wen Ning
      */
     public boolean checkPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (checkPiecePlayability(source.x, source.y)
                 && (selectedPiece.getX() != destination.x || selectedPiece.getY() != destination.y)) {
-            return selectedPiece.isMovableTo(board, selectedPiece, destination.x, destination.y);
+            return selectedPiece.isMovableTo(board, destination.x, destination.y);
         }
 
         return false;
@@ -218,12 +273,19 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Calls {@code checkPieceMove()}. If it returns true, get the chess piece at the destination and remove it from the board.
-     * After that, move the selected chess piece to the destination.
-     * If the selected chess piece is a {@code Point} piece and it reaches the end of the board, flip the piece.
+     * Plays a piece move by removing any {@code Piece} object located at the specified destination {@code Point}, then 
+     * move the selected {@code Piece} object at the specified source to the specified destination.
+     * Returns if no piece is at the specified source or the piece cannot be moved to the specified destination.
+     * This methods calls {@code checkPieceMove()} to validate the mentioned scenario. 
+     * <p>
+     * After playing the piece move, notify the observers of {@code Event.PIECEMOVE}.
+     * If the selected piece is a {@code Point} piece and it reaches the end of the board, flip the piece.
      * 
-     * @param source the source ({@code java.awt.Point})
-     * @param destination the destination ({@code java.awt.Point})
+     * @param source the source {@code Point} ({@code java.awt.Point})
+     * @param destination the destination {@code Point} ({@code java.awt.Point})
+     * @see #checkPieceMove(java.awt.Point, java.awt.Point)
+     * @see observer.Event#PIECEMOVE
+     * @author Chay Wen Ning
      */
     public void playPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (!checkPieceMove(source, destination))
@@ -239,25 +301,28 @@ public class ChessGame implements Subject {
         board.setPieceAt(selectedPiece, destination.x, destination.y);
 
         // if the piece is a Point piece and it reached the end, flip it
-        if (selectedPiece.getPieceType() == PieceType.Point
+        if (selectedPiece.getPieceType() == PieceType.POINT
                 && (selectedPiece.getY() == 0 || selectedPiece.getY() == board.getNoOfRow() - 1)) {
             selectedPiece.setFlipped(!selectedPiece.isFlipped());
         }
 
-        notifyObservers(Event.PieceMove);
+        notifyObservers(Event.PIECEMOVE);
         endTurn();
     }
 
     /**
-     *
-     * Checks if a player has won the game and notifies observers of the PlayerWin Event.
-     * If no player has won, increment the current player's play count and set their hasPlayed to true.
      * 
+     * Checks if a player has won the game and notifies the observers of {@code Event.PLAYERWIN} if so.
+     * Else if no player has won, increment the current player's play count and set their {@code hasPlayed} to {@code true}.
+     * 
+     * @see #checkWinner()
+     * @see observer.Event#PLAYERWIN
+     * @author Chay Wen Ning
      */
     public void endTurn() {
         Player winner = checkWinner();
         if (winner != null) {
-            notifyObservers(Event.PlayerWin.returnArgument(winner.getIndex()));
+            notifyObservers(Event.PLAYERWIN.returnArgument(winner.getIndex()));
         } else {
             players[playerTurn].incrementPlayCount();
             players[playerTurn].setHasPlayed(true);
@@ -268,10 +333,13 @@ public class ChessGame implements Subject {
     }
 
     /**
-     *
-     * Determines whether each player has their Sun piece. If a player has no Sun piece, return the other player as the winner.
      * 
-     * @return the winning Player, if there is no winner yet, return null
+     * Determines whether each player has their {@code Sun} piece. 
+     * If a player has no {@code Sun} piece, returns the other player as the winner.
+     * If there is no winner, return {@code null}.
+     * 
+     * @return the winner {@code Player} object, {@code null} if there is no winner
+     * @author Chay Wen Ning
      */
     public Player checkWinner() {
         // check if each player still have the Sun piece
@@ -280,7 +348,7 @@ public class ChessGame implements Subject {
             boolean hasSun = false;
 
             for (Piece pc : pieces) {
-                if (pc.getPieceType() == PieceType.Sun) {
+                if (pc.getPieceType() == PieceType.SUN) {
                     hasSun = true;
                     break;
                 }
@@ -294,8 +362,11 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Switch the Time pieces to Plus piece and Plus pieces to Time piece.
+     * Switches the {@code Time} pieces to {@code Plus} piece and {@code Plus} pieces to {@code Time} piece.
      * 
+     * @see chesspiece.Piece#cloneToPlus()
+     * @see chesspiece.Piece#cloneToTime()
+     * @author Chay Wen Ning
      */
     public void switchTimeAndPlusPiece() {
         for (Player pl : players) {
@@ -304,11 +375,11 @@ public class ChessGame implements Subject {
             Set<Piece> playerPieces = pl.getPieces();
             for (Piece pc : playerPieces) {
                 PieceType pType = pc.getPieceType();
-                if (pType == Piece.PieceType.Time) {
+                if (pType == Piece.PieceType.TIME) {
                     piecesToAdd.add(pc.cloneToPlus());
                     piecesToRemove.add(pc);
 
-                } else if (pType == Piece.PieceType.Plus) {
+                } else if (pType == Piece.PieceType.PLUS) {
                     piecesToAdd.add(pc.cloneToTime());
                     piecesToRemove.add(pc);
                 }
@@ -326,10 +397,14 @@ public class ChessGame implements Subject {
 
     /**
      *
-     * Save data of the current game to the specified file.
+     * Writes the data of the current game to the specified {@link java.io.File File} object.
+     * Returns {@code true} if no exception occurs.
      * 
-     * @param file the file to be written
+     * @param file the {@code File} object to write data to
      * @return {@code true} if no exception occurs
+     * @see chessgame.ChessController#saveGameData(File)
+     * @see #loadGameDataFromFile(File)
+     * @author Goh Shi Yi
      */
     public boolean writeGameDataToFile(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
@@ -362,11 +437,13 @@ public class ChessGame implements Subject {
     }
 
     /**
-     *
-     * Read and extract the values of red, green and blue to generate the colour.
      * 
-     * @param string the RGB color code in the form of String
-     * @return color 
+     * Generates and returns the corresponding {@code Color} object 
+     * from the specified {@code String} object that contains RGB color code.
+     *      
+     * @param string the {@code String} object that contains RGB color code
+     * @return the corresponding {@code Color} object 
+     * @author Choo Yun Yi
      */
     public Color toColor(String string) {
         String[] colorString = string.split(",");
@@ -402,11 +479,15 @@ public class ChessGame implements Subject {
     }
 
     /**
-     *
-     * Read and load the content of the specified file.
      * 
-     * @param fileName the file to be read
+     * Read and load the game data of the specified {@link java.io.File File} object.
+     * Returns {@code true} if no exception occurs.
+     * 
+     * @param fileName the {@code File} object to read data from
      * @return {@code true} if no exception occurs
+     * @see chessgame.ChessController#loadGameData(File)
+     * @see #writeGameDataToFile(File)
+     * @author Choo Yun Yi
      */
     public boolean loadGameDataFromFile(File fileName) {
         StringBuilder fileContent = new StringBuilder();
@@ -444,35 +525,35 @@ public class ChessGame implements Subject {
                 String[] loadPieceString = fileLine[min].split(",");
                 
                 switch (PieceType.valueOf(loadPieceString[2])) {
-                    case Hourglass: {
+                    case HOURGLASS: {
                         loadPiece = new Hourglass(Integer.parseInt(loadPieceString[0]),
                                 Integer.parseInt(loadPieceString[1]),
                                 colour,
                                 Boolean.parseBoolean(loadPieceString[3]));
                         break;
                     }
-                    case Plus: {
+                    case PLUS: {
                         loadPiece = new Plus(Integer.parseInt(loadPieceString[0]),
                                 Integer.parseInt(loadPieceString[1]),
                                 colour,
                                 Boolean.parseBoolean(loadPieceString[3]));
                         break;
                     }
-                    case Point: {
+                    case POINT: {
                         loadPiece = new Point(Integer.parseInt(loadPieceString[0]),
                                 Integer.parseInt(loadPieceString[1]),
                                 colour,
                                 Boolean.parseBoolean(loadPieceString[3]));
                         break;
                     }
-                    case Sun: {
+                    case SUN: {
                         loadPiece = new Sun(Integer.parseInt(loadPieceString[0]),
                                 Integer.parseInt(loadPieceString[1]),
                                 colour,
                                 Boolean.parseBoolean(loadPieceString[3]));
                         break;
                     }
-                    case Time: {
+                    case TIME: {
                         loadPiece = new Time(Integer.parseInt(loadPieceString[0]),
                                 Integer.parseInt(loadPieceString[1]),
                                 colour,

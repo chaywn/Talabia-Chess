@@ -1,8 +1,3 @@
-/**
-*
-* @author 
-*/
-
 package chesspiece;
 
 import java.awt.*;
@@ -10,18 +5,25 @@ import java.awt.*;
 import chessboard.ChessBoard;
 
 /**
- * The {@code Hourglass} class ; Extends {@code Piece} class.
+ * The {@code Hourglass} class; Extends {@code Piece} abstract class.
+ * Every {@code Hourglass} piece has a x, y coordinate, a {@code PieceType}, and a {@code flipped} boolean to represent the orientation of the {@code Hourglass} piece.
+ * 
+ * @see chesspiece.Piece
+ * @see chesspiece.Piece.PieceType
+ * @author Mohamed Kamal Eldin
  */
 public class Hourglass extends Piece {
 
     /**
      *
-     * Constructs a new {@code Hourglass} piece.
+     * Constructs a new {@code Hourglass} piece. This method calls the super constructor method {@code Piece}.
      *
-     * @param x       x coordinate
-     * @param y       y coordinate
-     * @param color   the piece color in the form of Color
-     * @param flipped in the form of boolean the orientation of the piece
+     * @param x       the x coordinate
+     * @param y       the y coordinate 
+     * @param color   the {@code Color} of the {@code Hourglass} piece
+     * @param flipped the orientation of the {@code Hourglass} piece, set {@code true} to show the piece flipped 180 degree
+     * @see chesspiece.Piece#Piece(int, int, Color, Boolean)
+     * @author Mohamed Kamal Eldin
      */
     public Hourglass(int x, int y, Color color, Boolean flipped) {
         super(x, y, color, flipped);
@@ -29,21 +31,21 @@ public class Hourglass extends Piece {
 
     /**
      *
-     * Movement of the Hourglass piece
+     * Validates a {@code Hourglass} piece movement to the specified x, y coordinates.
+     * Returns {@code true} if the {@code Hourglass} piece is movable to the specified x, y coordinates.
      * 
-     * @param board the {@code ChessBoard}
-     * @param p     the {@co{@code ChessBoard}
-     *              * @param x x coordinae
-     * @param x     x coordinate
-     * @param y     y coordinate
-     * @return {@code true} if the piece is movable
+     * @param board the {@code ChessBoard} object
+     * @param x the x coordinate to move to
+     * @param y the y coordinate to move to
+     * @return {@code true} if the {@code Hourglass} piece is movable to the specified x, y coordinates
+     * @author Mohamed Kamal Eldin
      */
     @Override
-    public boolean isMovableTo(ChessBoard board, Piece p, int x, int y) {
-        int xDistance = Math.abs(x - p.getX());
-        int yDistance = Math.abs(y - p.getY());
+    public boolean isMovableTo(ChessBoard board, int x, int y) {
+        int xDistance = Math.abs(x - getX());
+        int yDistance = Math.abs(y - getY());
 
-        if ((board.getPieceAt(x, y) != null) && (p.getColor().equals(board.getPieceAt(x, y).getColor()))) {
+        if ((board.getPieceAt(x, y) != null) && (getColor().equals(board.getPieceAt(x, y).getColor()))) {
             return false;
         }
 

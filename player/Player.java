@@ -1,8 +1,3 @@
-/**
-*
-* @author Chay Wen Ning
-*/
-
 package player;
 
 import chesspiece.*;
@@ -11,10 +6,16 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-import chessboard.ChessBoard;
-
 /**
  * The {@code Player} class; Represents a player in the chess game.
+ * The {@code Player} class contains a {@code static int playerCount} that stores the number of existing {@code Player} object.
+ * Every time a {@code Player} object is constructed, the player count increments by one, and is automatically assigned to the index of the {@code Player} object.
+ * Based on the index of the player, each {@code Player} object is assigned to a {@code Color}, which is default {@code Color.YELLOW} for the first player (of index 0), 
+ * and {@code Color.BLUE} for the second player (of index 1).
+ * Each {@code Player} object also contains a {@code Set<Piece>}, in which {@code Piece} objects are initialized by calling {@code initializePieces}.
+ * 
+ * @author Chay Wen Ning
+ * @author Melody Koh Si Jie
  */
 public class Player {
     private static Color[] colors = { Color.YELLOW, Color.BLUE };
@@ -28,7 +29,11 @@ public class Player {
     private boolean hasPlayed;
 
     /**
-     * Constructs a new {@code Player}; The index of which is based on the number of existing players.
+     * Constructs a new {@code Player} object; The index of which is based on the number of existing players.
+     * Based on the index, assign a {@code Color} to the {@code Player}, which is default {@code Color.YELLOW} for the first {@code Player} (of index 0), 
+     * and {@code Color.BLUE} for the second {@code Player} (of index 1).
+     * 
+     * @author Chay Wen Ning
      */
     public Player() {
         this.index = playerCount++;
@@ -39,9 +44,13 @@ public class Player {
 
     /**
      *
-     * Get the piece {@code Color}.
+     * Returns the {@code Color} object of the {@code Player}. 
+     * The color returned is default {@code Color.YELLOW} for the first {@code Player} (of index 0), 
+     * and {@code Color.BLUE} for the second {@code Player} (of index 1).
      * 
-     * @return the piece {@code Color}
+     * @return the {@code Color} object of the {@code Player}, {@code Color.YELLOW} for {@code Player} of index 0, 
+     * {@code Color.BLUE} for {@code Player} of index 1
+     * @author Chay Wen Ning
      */
     public Color getColor() {
         return color;
@@ -49,9 +58,10 @@ public class Player {
 
     /**
      *
-     * Get the index of player.
+     * Returns the index of the {@code Player}.
      * 
-     * @return the player index
+     * @return the index of the {@code Player}
+     * @author Chay Wen Ning
      */
     public int getIndex() {
         return index;
@@ -59,9 +69,10 @@ public class Player {
 
     /**
      *
-     * Get the chess pieces
+     * Returns the {@code Set<Piece>} of the {@code Player}.
      * 
-     * @return the chess pieces 
+     * @return the {@code Set<Piece>} of the {@code Player}
+     * @author Chay Wen Ning
      */
     public Set<Piece> getPieces() {
         return pieces;
@@ -69,9 +80,10 @@ public class Player {
 
    /**
      *
-     * Set the piece color
+     * Sets the {@code Color} of the {@code Player}.
      * 
-     * @param color the piece color in the form of Color
+     * @param color the {@code Color} to set the {@code Player} to
+     * @author Chay Wen Ning
      */
     public void setColor(Color color) {
         this.color = color;
@@ -79,9 +91,13 @@ public class Player {
 
    /**
      *
-     * Get the play count
+     * Returns the play count of the {@code Player}.
      * 
-     * @return the play count
+     * @return the play count of the {@code Player}
+     * @see #setPlayCount(int)
+     * @see #incrementPlayCount()
+     * @see #resetPlayCount()
+     * @author Chay Wen Ning
      */
     public int getPlayCount() {
         return playCount;
@@ -89,9 +105,10 @@ public class Player {
 
    /**
      *
-     * Set the the play count
+     * Sets the play count of the {@code Player}.
      * 
-     * @param playCount the play count  
+     * @param playCount the play count to set the {@code Player} to
+     * @author Chay Wen Ning
      */
     public void setPlayCount(int playCount) {
         this.playCount = playCount;
@@ -99,9 +116,10 @@ public class Player {
 
    /**
      *
-     * Set the index of player
+     * Sets the index of the {@code Player}
      * 
-     * @param index the player index  
+     * @param index the {@code Player} index to set
+     * @author Chay Wen Ning
      */
     public void setIndex(int index) {
         this.index = index;
@@ -109,9 +127,12 @@ public class Player {
 
    /**
      *
-     * Check whether the player has played
+     * Returns the {@code hasPlayed} status of the {@code Player}.
+     * Returns {@code true} if the {@code Player} has played a move.
      * 
-     * @return {@code true} if player played a piece move
+     * @return {@code true} if the {@code Player} has played a move
+     * @see #setHasPlayed(boolean)
+     * @author Chay Wen Ning
      */
     public boolean hasPlayed() {
         return hasPlayed;
@@ -119,69 +140,88 @@ public class Player {
 
    /**
      *
-     * Set the status of player
+     * Sets the {@code hasPlayed} status of the {@code Player}.
      * 
-     * @param hasPlayed whether the player has moved a piece in the form of boolean
+     * @param hasPlayed the {@code hasPlayed} status of the {@code Player} to set
+     * @see #hasPlayed()
+     * @author Chay Wen Ning
      */
     public void setHasPlayed(boolean hasPlayed) {
         this.hasPlayed = hasPlayed;
     }
 
    /**
-     * Increase the play count by one
+     * Increments the play count of {@code Player} by one.
+     * 
+     * @see #setPlayCount(int)
+     * @see #resetPlayCount()
+     * @author Melody Koh Si Jie
      */
     public void incrementPlayCount() {
         playCount++;
     }
 
    /**
-     * Reset play count
+     * Resets the play count of {@code Player} to 0.
+     * 
+     * @see #setPlayCount(int)
+     * @author Melody Koh Si Jie
      */
     public void resetPlayCount() {
         playCount = 0;
     }
 
    /**
-     * Reset the status of player
+     * Resets the {@code hasPlayed} status of the {@code Player}.
+     * 
+     * @see #setHasPlayed(boolean)
+     * @author Chay Wen Ning
      */
     public void resetHasPlayed() {
         hasPlayed = false;
     }
 
    /**
-     * Add a chess piece to the collection
+     * Adds a {@code Piece} object to the {@code Set<Piece>} of the {@code Player}.
      * 
-     * @param piece the {@code Piece} 
+     * @param piece the {@code Piece} object to be added
+     * @author Chay Wen Ning
      */
     public void addPiece(Piece piece) {
         pieces.add(piece);
     }
 
    /**
-     * Remove a chess piece to the collection
+     * Removes a {@code Piece} object to the {@code Set<Piece>} of the {@code Player}.
      * 
-     * @param piece the {@code Piece}  
+     * @param piece the {@code Piece} object to be removed
+     * @see #clearPieces()
+     * @author Chay Wen Ning
      */
     public void removePiece(Piece piece) { 
         pieces.remove(piece);
     }
 
    /**
-     * Clear the pieces
+     * Clears all {@code Piece} objects in the {@code Set<Piece>} of the {@code Player}.
+     * 
+     * @see #removePiece(Piece)
+     * @author Chay Wen Ning
      */
     public void clearPieces() {
         pieces.clear();
     }
 
    /**
-     * Initialize the pieces located at the specified x,y coordinates on the board.
+     * Initializes the starting {@code Piece} objects for the {@code Player},
+     * consisting of 7 {@code Point} pieces, 2 {@code Plus} pieces, 2 {@code Hourglass} pieces, 2 {@code Time} pieces, and 1 {@code Sun} piece.
      * 
-     * @param board the {@code ChessBoard}  
      * @param offsetX x-coordinate offset  
      * @param offsetY y-coordinate offset  
-     * @param opposite the orientation of the piece in the form of boolean
+     * @param opposite the orientation of the pieces, {@code true} if the pieces are flipped 180 degree
+     * @author Chay Wen Ning
      */
-    public void initializePieces(ChessBoard board, int offsetX, int offsetY, boolean opposite) {
+    public void initializePieces(int offsetX, int offsetY, boolean opposite) {
         int offsetY2 = opposite == true ? 1 : 0;
 
         // Initialize Point pieces
@@ -205,13 +245,13 @@ public class Player {
 
         // Initialize Sun piece
         addPiece(new Sun(offsetX + 3, offsetY + offsetY2, color, opposite));
-
-        // Update pieces onto the board
-        board.setPlayerPiece(this);
     }
 
    /**
-     * Reset the player count
+     * Resets the player count of the {@code Player}.
+     * 
+     * @see #setPlayCount(int)
+     * @author Chay Wen Ning
      */
     public static void resetPlayerCount() {
         playerCount = 0;

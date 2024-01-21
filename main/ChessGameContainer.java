@@ -1,12 +1,3 @@
-/**
-*
-* @author Chay Wen Ning
-* @author Melody Koh
-* @author Goh Shi Yi
-* @author Choo Yun Yi
-* @author Mohamed kamal
-
-*/
 package main;
 
 import javax.swing.*;
@@ -26,8 +17,17 @@ import java.io.File;
 
 /**
  * 
- * The ChessGameContainer class extends JFrame
+ * The {@code ChessGameContainer} class; Extends {@code JFrame}.
+ * The {@code ChessGameContainer} contains the GUI components of the application, and handles user inputs by
+ * communicating with the {@code ChessGame} and {@code ChessView} objects through the {@code ChessController}.
  * 
+ * @see chessgame.ChessGame
+ * @see chessgame.ChessView
+ * @see chessgame.ChessController
+ * @author Chay Wen Ning
+ * @author Melody Koh
+ * @author Goh Shi Yi
+ * @author Choo Yun Yi
  */
 public class ChessGameContainer extends JFrame {
     // Constants
@@ -35,9 +35,9 @@ public class ChessGameContainer extends JFrame {
     public final int NO_OF_COLUMN = 7;
     public final int GRID_SIZE = 50;
 
-    private final Color toPlayColor = Color.LIGHT_GRAY;
-    private final Color canPlayColor = Color.GREEN;
-    private final Color cannotPlayColor = Color.RED;
+    private final Color TO_PLAY_COLOR = Color.LIGHT_GRAY;
+    private final Color CAN_PLAY_COLOR = Color.GREEN;
+    private final Color CANNOT_PLAY_COLOR = Color.RED;
 
     private ChessController chessController;
     private JFileChooser fc;
@@ -73,11 +73,12 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * The ChessGameContainer Constructor
+     * Constructs a new {@code ChessGameContainer} with the GUI and game components.
+     * This method creates a {@code ChessGame}, a {@code ChessView}, and a {@code ChessController} object.
      * 
-     * @return default
+     * @author Chay Wen Ning
      */
-    ChessGameContainer() {
+    public ChessGameContainer() {
         // Initialize chess components
         chessController = new ChessController(new ChessGame(), new ChessView(this));
 
@@ -117,9 +118,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the main panel
+     * Returns the main panel in the {@code ChessGameContainer}.
      * 
-     * @return the main panel
+     * @return the main panel in the {@code ChessGameContainer}
+     * @author Chay Wen Ning
      */
     public JPanel getMainPanel() {
         return mainPanel;
@@ -127,9 +129,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the grid panel
+     * Returns the grid panel in the {@code ChessGameContainer}.
      * 
-     * @return the grid panel
+     * @return the grid panel in the {@code ChessGameContainer}
+     * @author Chay Wen Ning
      */
     public JPanel getGridPanel() {
         return gridPanel;
@@ -137,9 +140,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the glass panel
+     * Returns the glass panel in the {@code ChessGameContainer}.
      * 
-     * @return the glass panel
+     * @return the glass panel in the {@code ChessGameContainer}
+     * @author Chay Wen Ning
      */
     public JPanel getGlassPane() {
         return glassPane;
@@ -147,9 +151,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the player's turn label
+     * Returns the player turn label in the {@code ChessGameContainer}.
      * 
-     * @return the player's turn label
+     * @return the player turn label in the {@code ChessGameContainer}
+     * @author Chay Wen Ning
      */
     public JLabel getPlayerTurnLabel() {
         return playerTurnLabel;
@@ -157,9 +162,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the label of player status
+     * Returns the player status label in the {@code ChessGameContainer}.
      * 
      * @return the label of player status
+     * @author Chay Wen Ning
      */
     public JLabel getPlayerStatusLabel() {
         return playerStatusLabel;
@@ -167,9 +173,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Get the switch player's turn button
+     * Returns the switch turn button in the {@code ChessGameContainer}.
      * 
-     * @return the switch player's turn button
+     * @return the switch turn button in the {@code ChessGameContainer}
+     * @author Chay Wen Ning
      */
     public JButton getSwitchBtn() {
         return switchBtn;
@@ -177,18 +184,8 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Set the image of the selected piece
-     * 
-     * @param image specified image in the form of Image
-     */
-    public void setSelectedPieceImage(Image image) {
-        selectedPieceImage = image;
-    }
-
-    /**
-     * 
-     * Reset the container
-     * 
+     * Resets the components in the {@code ChessGameContainer}.
+     * @author Chay Wen Ning
      */
     public void resetContainer() {
         if (gridToPlay != null) {
@@ -209,8 +206,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Create glass pane
+     * Creates a glass pane in the {@code ChessGameContainer}. 
+     * The glass pane draws the selected chess piece image on the panel when the user clicks and drags a chess piece.
      * 
+     * @author Chay Wen Ning
      */
     public void createGlassPane() {
         glassPane = new JPanel() {
@@ -238,8 +237,8 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Create game panel
-     * 
+     * Creates a game panel in the {@code ChessGameContainer}.
+     * The game panel displays the chess board in the form of grids.
      */
     public void createGamePanel() {
         gamePanel = new JPanel(new GridBagLayout());
@@ -262,9 +261,13 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Create side panel and include all the funcional buttons to facilitate the
-     * game play
+     * Creates a side panel in the {@code ChessGameContainer}. 
+     * The side panel contains all the funcional buttons to facilitate the game play.
      * 
+     * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
+     * @author Goh Shi Yi
+     * @author Choo Yun Yi
      */
     public void createSidePanel() {
         sidePanel = new JPanel();
@@ -356,8 +359,11 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Switch player's turn
+     * Calls the {@code ChessController} object to switch the player turn.
+     * This method calls the {@code switchTurnAndUpdateContainer} method in the controller.
      * 
+     * @see chessgame.ChessController#switchTurnAndUpdateContainer()
+     * @author Chay Wen Ning
      */
     public void switchTurn() {
         chessController.switchTurnAndUpdateContainer();
@@ -365,8 +371,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Start the game
+     * Starts a chess game.
      * 
+     * @author Melody Koh Si Jie
+     * @author Chay Wen Ning
      */
     public void startGame() {
         gameStarted = true;
@@ -379,8 +387,11 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Show pop-up screen to confirm if the player wants to start a new game
+     * Prompts a new game confirmation to the user.
+     * If the user selects "Yes", start a new game. 
+     * This method calls the {@code newGame} method in the {@code ChessController} object. 
      * 
+     * @author Chay Wen Ning
      */
     public void promptNewGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
@@ -394,8 +405,10 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Show pop-up screen to confirm if the player wants to quit the game
+     * Prompts a quit game confirmation to the user.
+     * If the user selects "Yes", exit the application. 
      * 
+     * @author Chay Wen Ning
      */
     public void promptExitGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
@@ -408,9 +421,18 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Show pop-up screen to choose or create file
+     * Creates a {@code JFileChooser} and shows an "Open File" file chooser dialog to create or locate a file.
      * 
-     * @return pop-up screen to choose or create file
+     * @return the return state of the file chooser on popdown:
+     * <ul>
+     * <li>JFileChooser.CANCEL_OPTION
+     * <li>JFileChooser.APPROVE_OPTION
+     * <li>JFileChooser.ERROR_OPTION if an error occurs or the
+     *                  dialog is dismissed
+     * </ul>
+     * 
+     * @author Goh Shi Yi
+     * @author Choo Yun Yi
      */
     public int createOrLocateFile() {
         fc = new JFileChooser();
@@ -419,8 +441,11 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Save the game
+     * Calls the {@code saveGameData} method in {@code ChessController} to save the current game progress to a {@link java.io.File File}.
      * 
+     * @see chessgame.ChessController#saveGameData(File)
+     * @see #loadGame()
+     * @author Goh Shi Yi
      */
     public void saveGame() {
         File selectedFile = fc.getSelectedFile();
@@ -429,8 +454,11 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * Load a game
+     * Calls the {@code loadGameData} method in {@code ChessController} to restore a game progress from a saved {@link java.io.File File}.
      * 
+     * @see chessgame.ChessController#loadGameData(File)
+     * @see #saveGame()
+     * @author Choo Yun Yi
      */
     public void loadGame() {
         File selectedFile = fc.getSelectedFile();
@@ -443,15 +471,20 @@ public class ChessGameContainer extends JFrame {
 
     /**
      * 
-     * MainPanelMouseListener class impements MouseListener and MouseMotionListener.
+     * The {@code MainPanelMouseListener} class; Implements {@link java.awt.event.MouseListener MouseListener} and {@link java.awt.event.MouseMotionListener MouseMotionListener}.
+     * This class acts as a listener to the main panel in {@code ChessGameContainer}, and responds to user's mouse inputs on the chess board.
      * 
+     * @author Chay Wen Ning
      */
     class MainPanelMouseListener implements MouseListener, MouseMotionListener {
         /**
          *
-         * Verify the availability to select a chess piece
+         * Selects a chess piece on the chess board if the piece is valid.
+         * This method calls the {@code convertCoordinateAndCheckPiecePlayability} method in the {@code ChessController} to validate a chess piece.
          * 
-         * @param point the pointed position Point
+         * @param point the {@code Point} of the mouse
+         * @see chessgame.ChessController#convertCoordinateAndCheckPiecePlayability(Point)
+         * @author Chay Wen Ning
          */
         public void selectPieceIfValid(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed()) {
@@ -469,7 +502,7 @@ public class ChessGameContainer extends JFrame {
             gridPanelMousePoints[0] = relPoint;
             gridPanelMousePoints[1] = relPoint;
 
-            if (!chessController.ConvertCoordinateAndCheckPiecePlayability(gridPanelMousePoints[0])) {
+            if (!chessController.convertCoordinateAndCheckPiecePlayability(gridPanelMousePoints[0])) {
                 return;
             }
 
@@ -479,7 +512,7 @@ public class ChessGameContainer extends JFrame {
                 gridToPlayColor = gridToPlay.getBackground();
                 gridToPlayIcon = gridToPlay.getIcon();
 
-                gridToPlay.setBackground(toPlayColor);
+                gridToPlay.setBackground(TO_PLAY_COLOR);
                 gridToPlay.setIcon(null);
 
                 selectedPieceImage = chessController.getSelectedPieceImage();
@@ -488,9 +521,12 @@ public class ChessGameContainer extends JFrame {
 
         /**
          *
-         * Verify the availability to play a chess piece
+         * Verifies the availability to play a chess piece and proceeds to play the piece if the move is valid.
+         * This method calls the {@code convertCoordinateAndAttemptPlay(Point, Point)} method in the {@code ChessController} to validate and play a chess piece move.
          * 
-         * @param point the pointed position Point
+         * @see chessgame.ChessController#convertCoordinateAndAttemptPlay(Point, Point)
+         * @param point the {@code Point} of the mouse
+         * @author Chay Wen Ning
          */
         public void playPieceIfValid(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed())
@@ -516,14 +552,19 @@ public class ChessGameContainer extends JFrame {
             }
 
             glassPane.repaint();
-            chessController.ConvertCoordinateAndAttemptPlay(gridPanelMousePoints[0], gridPanelMousePoints[1]);
+            chessController.convertCoordinateAndAttemptPlay(gridPanelMousePoints[0], gridPanelMousePoints[1]);
         }
 
         /**
          *
-         * Show whether a piece can be placed at the specified position
+         * Shows whether a chess piece can be placed at the specified position.
+         * This method calls the {@code convertCoordinateAndCheckPieceMove(Point, Point)} method in the {@code ChessController} to validate a chess piece move.
+         * If a piece move is playable, color the selected grid {@code Color.GREEN}.
+         * Else if the piece move is not playable, color the selected grid {@code Color.RED}
          * 
-         * @param point the pointed position Point
+         * @param point the {@code Point} of the mouse
+         * @see chessgame.ChessController#convertCoordinateAndCheckPieceMove(Point, Point)
+         * @author Chay Wen Ning
          */
         public void showIsPositionPlacable(Point point) {
             if (!gameStarted || chessController.currentPlayerHasPlayed() || selectedPieceImage == null)
@@ -548,7 +589,7 @@ public class ChessGameContainer extends JFrame {
                     selectedGrid = (JLabel) selectedComp;
                     selectedGridColor = selectedGrid.getBackground();
                     playabilityColor = chessController.convertCoordinateAndCheckPieceMove(gridPanelMousePoints[0],
-                            gridPanelMousePoints[1]) ? canPlayColor : cannotPlayColor;
+                            gridPanelMousePoints[1]) ? CAN_PLAY_COLOR : CANNOT_PLAY_COLOR;
                     selectedGrid.setBackground(playabilityColor);
                 } catch (ClassCastException ex) {
                 }
@@ -556,81 +597,83 @@ public class ChessGameContainer extends JFrame {
         }
 
         // Mouse listener methods:
-        @Override
+        
         /**
          * 
-         * When mouse is clicked
+         * Handles a mouse clicked event.
          * 
          */
+        @Override
         public void mouseClicked(MouseEvent e) {
         }
 
         @Override
         /**
          * 
-         * When mouse entered
+         * Handles a mouse entered event.
          * 
          */
         public void mouseEntered(MouseEvent e) {
         }
 
-        @Override
         /**
          * 
-         * When mouse exited
+         * Handles a mouse exited event.
          * 
          */
+        @Override
         public void mouseExited(MouseEvent e) {
         }
 
-        @Override
         /**
          * 
-         * When mouse is pressed
+         * Handles a mouse pressed event.
          * 
          */
+        @Override
         public void mousePressed(MouseEvent e) {
             selectPieceIfValid(e.getPoint());
             glassPane.repaint();
         }
 
-        @Override
+        
         /**
          * 
-         * When mouse is released
+         * Handles a mouse released event.
          * 
          */
+        @Override
         public void mouseReleased(MouseEvent e) {
             playPieceIfValid(e.getPoint());
         }
 
+
+
         // Mouse motion listener methods:
-        @Override
+
         /**
          * 
-         * When mouse is moved
+         * Handles a mouse moved event.
          * 
          */
+        @Override
         public void mouseMoved(MouseEvent e) {
         }
 
-        @Override
         /**
          * 
-         * When mouse is dragged
+         * Handles a mouse dragged event.
          * 
          */
+        @Override
         public void mouseDragged(MouseEvent e) {
             showIsPositionPlacable(e.getPoint());
             glassPane.repaint();
         }
     }
 
-        /**
-         * 
-         * Main method to run the game.
-         * 
-         */
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
