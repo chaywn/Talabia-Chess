@@ -415,8 +415,18 @@ public class ChessGameContainer extends JFrame {
                 "Exiting the game will lose your current progress. Are you sure?", "New Game",
                 JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
-            System.exit(0);
+            exitGame();
         }
+    }
+
+    /**
+     * 
+     * Exits the game. 
+     * 
+     * @author Choo Yun Yi
+     */
+    public void exitGame() {
+        System.exit(0);
     }
 
     /**
