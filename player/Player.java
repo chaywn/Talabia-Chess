@@ -109,6 +109,7 @@ public class Player {
      * 
      * @param playCount the play count to set the {@code Player} to
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public void setPlayCount(int playCount) {
         this.playCount = playCount;

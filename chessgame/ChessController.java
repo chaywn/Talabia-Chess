@@ -156,6 +156,7 @@ public class ChessController implements Observer {
      * @see chessgame.ChessGame#switchTurnAndFlipBoard()
      * @see chessgame.ChessGame#switchPiecesIfPlayCountReached()
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public void switchTurnAndUpdateContainer() {
 
@@ -240,6 +241,7 @@ public class ChessController implements Observer {
      * @see chessgame.ChessGame
      * @see observer.Subject#addObserver(Observer)
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public void newGame() {
 

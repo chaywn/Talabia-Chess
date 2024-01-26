@@ -234,6 +234,7 @@ public class ChessView implements Subject {
      * @param winnerIndex the index of winner {@code Player}
      * @return {@code true} if user selects "Yes" and confirms a new game
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public boolean promptNewGameConfirmation(int winnerIndex) {
         int opt = JOptionPane.showConfirmDialog(frame,

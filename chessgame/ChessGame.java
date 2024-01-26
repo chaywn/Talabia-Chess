@@ -244,6 +244,7 @@ public class ChessGame implements Subject {
      * @param y the y coordinate  
      * @return {@code true} if the {@code Piece} object located at the specified x, y coordinate is playable
      * @author Melody Koh Si Jie
+     * @author Choo Yun Yi
      */
     public boolean checkPiecePlayability(int x, int y) {
         selectedPiece = board.getPieceAt(x, y);
@@ -411,17 +412,18 @@ public class ChessGame implements Subject {
      * @see chessgame.ChessController#saveGameData(File)
      * @see #loadGameDataFromFile(File)
      * @author Goh Shi Yi
+     * @author Choo Yun Yi
      */
     public boolean writeGameDataToFile(File file) {
         try (FileWriter writer = new FileWriter(file + ".txt")) {
-            writer.write(getPlayerTurn() + "\n"); // 0
-            writer.write(getPlayer(0).getPlayCount() + "\n"); // 1
-            writer.write(getPlayer(1).getPlayCount() + "\n"); // 2
-            writer.write(getLastMovedPiece().getX() + "," // 3
-                    + getLastMovedPiece().getY() + "," // 3
-                    + getLastMovedPiece().getPieceType() + "," // 3
-                    + getLastMovedPiece().isFlipped() + "\n" // 3
-                    + getLastMovedPiece().getColor() + "\n"); // 4
+            writer.write(getPlayerTurn() + "\n"); 
+            writer.write(getPlayer(0).getPlayCount() + "\n");
+            writer.write(getPlayer(1).getPlayCount() + "\n"); 
+            writer.write(getLastMovedPiece().getX() + "," 
+                    + getLastMovedPiece().getY() + "," 
+                    + getLastMovedPiece().getPieceType() + "," 
+                    + getLastMovedPiece().isFlipped() + "\n" 
+                    + getLastMovedPiece().getColor() + "\n"); 
             for (int x = 0; x < getBoard().getNoOfColumn(); x++) {
                 for (int y = 0; y < getBoard().getNoOfRow(); y++) {
                     Piece piece = getBoard().getPieceAt(x, y);

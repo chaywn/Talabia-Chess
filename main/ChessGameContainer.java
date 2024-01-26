@@ -397,6 +397,7 @@ public class ChessGameContainer extends JFrame {
      * This method calls the {@code newGame} method in the {@code ChessController} object. 
      * 
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public void promptNewGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
@@ -414,6 +415,7 @@ public class ChessGameContainer extends JFrame {
      * If the user selects "Yes", exit the application. 
      * 
      * @author Chay Wen Ning
+     * @author Choo Yun Yi
      */
     public void promptExitGameConfirmation() {
         int opt = JOptionPane.showConfirmDialog(mainPanel,
