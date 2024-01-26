@@ -187,6 +187,7 @@ public class ChessView implements Subject {
      * @see chessgame.ChessView.PieceImageType#getImage(Color)
      * @see chesspiece.Piece.PieceType
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public Image getPieceImage(Piece piece) {
         if (piece == null)
@@ -256,6 +257,7 @@ public class ChessView implements Subject {
      * @see #updateGridSize()
      * @see #updatePieceIcons(ChessBoard)
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public void addPieceIconResizer(ChessBoard board) {
         // remove exising component listener
@@ -329,6 +331,7 @@ public class ChessView implements Subject {
      * @param board the {@code ChessBoard} object
      * @see #loadPieceIcons(ChessBoard)
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public void updatePieceIcons(ChessBoard board) {
         JPanel gridPanel = frame.getGridPanel();

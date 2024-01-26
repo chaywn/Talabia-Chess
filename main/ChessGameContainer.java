@@ -186,6 +186,7 @@ public class ChessGameContainer extends JFrame {
      * 
      * Resets the components in the {@code ChessGameContainer}.
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public void resetContainer() {
         if (gridToPlay != null) {
@@ -239,6 +240,7 @@ public class ChessGameContainer extends JFrame {
      * 
      * Creates a game panel in the {@code ChessGameContainer}.
      * The game panel displays the chess board in the form of grids.
+     * @author Melody Koh Si Jie
      */
     public void createGamePanel() {
         gamePanel = new JPanel(new GridBagLayout());
@@ -485,6 +487,7 @@ public class ChessGameContainer extends JFrame {
      * This class acts as a listener to the main panel in {@code ChessGameContainer}, and responds to user's mouse inputs on the chess board.
      * 
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     class MainPanelMouseListener implements MouseListener, MouseMotionListener {
         /**

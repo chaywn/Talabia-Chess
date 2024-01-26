@@ -219,6 +219,7 @@ public class ChessGame implements Subject {
      * Checks if the total play count has reached the switch counter.
      * If so, switch {@code Time} and {@code Plus} pieces and notify observers with {@code Event.PIECESWTICH}.
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      * 
      * @see chesspiece.Piece#cloneToPlus()
      * @see chesspiece.Piece#cloneToTime()
@@ -286,6 +287,7 @@ public class ChessGame implements Subject {
      * @see #checkPieceMove(java.awt.Point, java.awt.Point)
      * @see observer.Event#PIECEMOVE
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public void playPieceMove(java.awt.Point source, java.awt.Point destination) {
         if (!checkPieceMove(source, destination))
@@ -367,6 +369,7 @@ public class ChessGame implements Subject {
      * @see chesspiece.Piece#cloneToPlus()
      * @see chesspiece.Piece#cloneToTime()
      * @author Chay Wen Ning
+     * @author Melody Koh Si Jie
      */
     public void switchTimeAndPlusPiece() {
         for (Player pl : players) {
