@@ -57,6 +57,7 @@ public class ChessBoard {
      * @param y the y coordinate
      * @return  the {@code Piece} object located at the specified x, y coordinates on the board
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public Piece getPieceAt(int x, int y) {
         if (x < 0 || x >= NO_OF_COLUMN || y < 0 || y >= NO_OF_ROW)
@@ -73,6 +74,7 @@ public class ChessBoard {
      * @param y     the y coordinate
      * @see #setPlayerPiece
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public void setPieceAt(Piece piece, int x, int y) {
         pieces[piece.getY()][piece.getX()] = null;
@@ -86,6 +88,7 @@ public class ChessBoard {
      * @param piece  the {@code Piece} object to be removed
      * @param player the {@code Player} object 
      * @author Chay Wen Ning  
+     * @author Goh Shi Yi
      */
 
         public void removePiece(Piece piece, Player player) {

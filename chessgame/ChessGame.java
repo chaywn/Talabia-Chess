@@ -190,6 +190,7 @@ public class ChessGame implements Subject {
      * @return the total number of rounds played by each player 
      * @see player.Player#getPlayCount()
      * @author Melody Koh Si Jie
+     * @author Goh Shi Yi
      */
     public int totalPlayCount() {
         int totalPlayCount = 0;
@@ -207,6 +208,7 @@ public class ChessGame implements Subject {
      * @see player.Player#resetHasPlayed()
      * @see chessboard.ChessBoard#flip()
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public void switchTurnAndFlipBoard() {
         playerTurn = playerTurn == 1 ? 0 : 1;
@@ -342,6 +344,7 @@ public class ChessGame implements Subject {
      * 
      * @return the winner {@code Player} object, {@code null} if there is no winner
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public Player checkWinner() {
         // check if each player still have the Sun piece

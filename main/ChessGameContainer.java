@@ -77,6 +77,7 @@ public class ChessGameContainer extends JFrame {
      * This method creates a {@code ChessGame}, a {@code ChessView}, and a {@code ChessController} object.
      * 
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public ChessGameContainer() {
         // Initialize chess components
@@ -211,6 +212,7 @@ public class ChessGameContainer extends JFrame {
      * The glass pane draws the selected chess piece image on the panel when the user clicks and drags a chess piece.
      * 
      * @author Chay Wen Ning
+     * @author Goh Shi Yi
      */
     public void createGlassPane() {
         glassPane = new JPanel() {
@@ -241,6 +243,7 @@ public class ChessGameContainer extends JFrame {
      * Creates a game panel in the {@code ChessGameContainer}.
      * The game panel displays the chess board in the form of grids.
      * @author Melody Koh Si Jie
+     * @author Goh Shi Yi
      */
     public void createGamePanel() {
         gamePanel = new JPanel(new GridBagLayout());
