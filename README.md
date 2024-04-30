@@ -11,7 +11,7 @@ Below are the instructions for compiling and running the Talabia Chess game.
 3. In the same directory, run the following command to run the Talabia Chess game:
     **java main/ChessGameContainer**
 
-(Alternative:UsingJARfile)
+(Alternative: Using JAR file)
 
 4. To compile and run the game using JARfile, go through Step 1 and Step 2 to compile all .java files in the project folder.
 5. Still in the project directory, run the following command to create a JARfile (replace <jar-file-name> with the filename):
