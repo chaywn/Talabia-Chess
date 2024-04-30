@@ -29,7 +29,7 @@ To start the game, click the "New Game" button in the side panel.
 ### Play/MovePiece
 ![Move Piece Screen (GREEN)](/Screenshots/move-piece-green.png)  
 ![Move Piece Screen (RED)](/Screenshots/move-piece-red.png)  
-To play or move a chess piece, click and drag a chess piece of the current player on the board. When dragging a piece, the grid which the mouse pointer is hovering over will change its colour to green if it is a valid destination, indicating that the piece can move to that particular position. If the grid is an invalid destination, it will change its colour to red). 
+To play or move a chess piece, click and drag a chess piece of the current player on the board. When dragging a piece, the grid which the mouse pointer is hovering over will change its colour to green if it is a valid destination, indicating that the piece can move to that particular position. If the grid is an invalid destination, it will change its colour to red. 
 
 Releasing the mouse drag at a valid (green) grid will move the chess piece onto its new destination. Else, the piece will return to its original position. 
 The movement of each chess piece is as follow:
