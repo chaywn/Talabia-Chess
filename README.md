@@ -40,7 +40,7 @@ The movement of each chess piece is as follow:
 ![Side Panel](/Screenshots/switch-turn.png)  
 Figure above shows the side panel update after a player played a move. The side panel contains game buttons and information about the current player. After playing a chess piece, the “Has played” property on the side panel will change to “true”, indicating that the current player has played a move. 
 
-Once in this state, the current player cannot play or move another chess piece. The “Switch Turn” button will be enabled, allowing the current player to switch the turn to the opponent player. Switching turns will update the side panel again, flip the board to view from the opposite point of the view, and highlight the grid last played by the previous player, as shown below:
+Once in this state, the current player cannot play or move another chess piece. The “Switch Turn” button will be enabled, allowing the current player to switch the turn to the opponent player. Switching turns will update the side panel again, flip the board to view from the opposite point of the view, and highlight the grid last played by the previous player, as shown below:  
 ![Board Flipl](/Screenshots/board-flip.png)  
 
 ### Save Game
@@ -55,7 +55,7 @@ To load a previously saved game, click the “Load Game” button to load the ga
 ![Piece Switch Message](/Screenshots/piece-switch-before.png)  
 At every two turns, players will be notified that all Time pieces and Plus pieces will switch types. This is done automatically after each player has played two rounds. 
 
-After piece switch:
+After piece switch:  
 ![Piece Switch Screen](/Screenshots/piece-switch-after.png)  
 
 ### Player Win
